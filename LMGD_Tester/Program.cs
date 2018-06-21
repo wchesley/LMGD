@@ -25,8 +25,8 @@ namespace LMGD_Tester
             var userID = browser.FindElementById("username");
             var pswd = browser.FindElementById("password");
             var login = browser.FindElementById("login_form");
-            userID.SendKeys("");
-            pswd.SendKeys("");
+            userID.SendKeys("wchesley");
+            pswd.SendKeys("fuimdrunk1");
             login.Submit();
             //Console.ReadKey();
             //var CookieOne = new Cookie("ASPSESSIONIDSACSRSTR","CKAMGCHAEBPNIKGPNBOLFJMP");
