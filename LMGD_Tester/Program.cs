@@ -17,7 +17,7 @@ namespace LMGD_Tester
         {
             //init chrome browser
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\Default");
+            chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
             string FOPS_Login = "https://fops.amatechtel.com/login.asp";
             browser.Navigate().GoToUrl(FOPS_Login);
@@ -27,7 +27,7 @@ namespace LMGD_Tester
             userID.SendKeys("wchesley");
             pswd.SendKeys("fuimdrunk1");
             login.Submit();
-            Console.ReadKey();
+            //Console.ReadKey();
             //var CookieOne = new Cookie("ASPSESSIONIDSACSRSTR","CKAMGCHAEBPNIKGPNBOLFJMP");
             //var CookieTwo = new Cookie("ASPSESSIONIDQCAQSQTR","ANCGFODBINMGEOHIEGNGLBFN");
             //browser.Manage().Cookies.AddCookie(CookieOne);
@@ -58,6 +58,8 @@ namespace LMGD_Tester
             var searchATA = browser.FindElementById("voip_search_submit_button");
             AccountNumber.SendKeys("802059");
             searchATA.Click();
+
+
             //Stuck here now, trying to handle new window opening and actually selecting ATA's... 
             Func<IWebDriver, bool> WaitForSearch = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
             {
@@ -65,61 +67,51 @@ namespace LMGD_Tester
                 var pageTitle = webDriver.FindElement(By.Id("search_results_div"));
                 if (pageTitle.Displayed == true)
                 {
-                    //pageTitle.Click();
                     
                     Console.WriteLine(browser.Url);
-
-                    //pageTitle = browser.FindElementByClassName("table_row");
-                    //pageTitle.Click();
-                    //var popup = browser.WindowHandles[1];
-                    //browser.SwitchTo().Window(browser.WindowHandles[1]);
+                    Console.ReadKey();
                     return true;
                 }
                 return false;
             });
             wait.Until(WaitForSearch);
-            //try
-            //{
-            //    IJavaScriptExecutor jsExecutor = browser as IJavaScriptExecutor;
-
-            //    //expirament...call JS directly from Selenium browser... 
-            //    jsExecutor.ExecuteScript("$('#search_results_div).on('click','table_row ," +
-            //        "function() {" +
-            //        "ata_id = $(this).attr('ata_id')" +
-            //        "window.open('modify.asp?ata_id=' + ata_id);" +
-            //        "}" +
-            //        "));");
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(e.ToString());
-            //}
+            
+            
             
             
             string Ata_Id = "";
             Func<IWebDriver, bool> WaitForATA = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
             {
                 Console.WriteLine("Awaiting ATA page...");
-                var pageTitle = webDriver.FindElement(By.CssSelector("tr[ata_id]"));
+                var pageTitle = webDriver.FindElement(By.ClassName("table_row"));
                 if (pageTitle.Displayed == true)
                 {
+                    pageTitle.Click();                    
                     return true;
                 }
                 return false;
             });
             wait.Until(WaitForATA);
-            var ata_id = browser.FindElement(By.CssSelector("tr[ata_id]"));
-            var ataResults = browser.FindElement(By.Id("search_results_div"));
-            Ata_Id = ata_id.GetAttribute("ata_id");
-            Console.WriteLine(Ata_Id);
-            string script = @"$('#search_results_div').on('click', '.table_row', function() { ata_id=$(this).attr('ata_id'); window.location.href('modify.asp?ata_id=' + ata_id); } );";
+
+            
+            //Console.WriteLine($"You are here: {browser.Url.ToString()}");
+            //Console.ReadKey();
+
+            //var ata_id = browser.FindElement(By.CssSelector("tr[ata_id]"));
+            //var ataResults = browser.FindElement(By.Id("search_results_div"));
+            //Ata_Id = ata_id.GetAttribute("ata_id");
+            //Console.WriteLine(Ata_Id);
+            string script = @"$('#search_results_div').on('click', '.table_row', function() { ata_id=$(this).attr('ata_id'); window.location.assign('http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id=' + ata_id); } );";
 
             browser.ExecuteScript(script);
             // I Think this redirect is giving me issues..need to see about handeling sessions in selenium. 
             //browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={Ata_Id}");
-            
+            Console.WriteLine("pause for js");
+            Console.ReadKey();
+            browser.SwitchTo().Window(browser.WindowHandles[2]);
             string whereAmI = browser.Url;
-            Console.WriteLine($"Browser Location, after 'searchign' ata... {whereAmI}");
+            Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
+            Console.WriteLine($"Browser Location, after 'searching' ata... {whereAmI}");
             Console.ReadKey();
             //potential solution: 
             //browser.FindElementByXPath("//*[@id='search_results_div']/div/form/fieldset/table/tbody/tr[2]").Click();
@@ -132,17 +124,20 @@ namespace LMGD_Tester
                 //ATA Div Xpath: //*[@id="modify_ata_form"]/fieldset/div[1]
 
                 // stuck here wiht finding customer ATA div with IP address. would be easier if someone left an ID tag on it but... 
-                var pageTitle = webDriver.FindElement(By.XPath("//div[/='http://']"));
+                var pageTitle = webDriver.FindElement(By.XPath("//*[@id='modify_ata_form']/fieldset/div[1]"));
                 if (pageTitle.Displayed  == true)
                 {
+                    pageTitle.Click();
                     return true;
                 }
                 return false;
             });
             wait.Until(WaitForAtaIP);
-            
+            Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
+            Console.ReadKey();
+            browser.SwitchTo().Window(browser.WindowHandles[3]);
             Console.WriteLine("Success?");
-
+            Console.WriteLine($"{browser.Url}");
             Console.WriteLine("End...");
             Console.ReadKey();
         }
