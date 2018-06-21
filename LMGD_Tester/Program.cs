@@ -25,14 +25,10 @@ namespace LMGD_Tester
             var userID = browser.FindElementById("username");
             var pswd = browser.FindElementById("password");
             var login = browser.FindElementById("login_form");
-            userID.SendKeys("wchesley");
-            pswd.SendKeys("fuimdrunk1");
+            userID.SendKeys("");
+            pswd.SendKeys("");
             login.Submit();
-            //Console.ReadKey();
-            //var CookieOne = new Cookie("ASPSESSIONIDSACSRSTR","CKAMGCHAEBPNIKGPNBOLFJMP");
-            //var CookieTwo = new Cookie("ASPSESSIONIDQCAQSQTR","ANCGFODBINMGEOHIEGNGLBFN");
-            //browser.Manage().Cookies.AddCookie(CookieOne);
-            //browser.Manage().Cookies.AddCookie(CookieTwo);
+            
             
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/ataprovisioning/");
             Console.WriteLine(browser.Url);
