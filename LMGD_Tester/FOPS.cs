@@ -99,6 +99,7 @@ namespace LMGD_Tester
                 }
                 return false;
             });
+            //Testing mat's...had trouble finding this "table_row" (slow load time) 
             Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
             try
             {
@@ -138,6 +139,7 @@ namespace LMGD_Tester
             Console.ReadKey();
             browser.SwitchTo().Window(browser.WindowHandles[3]);
             Console.WriteLine("Success?");
+            //TODO: log into ATA, get stats based on ATA Type and reboot ATA (Save config too). or what you wrote above dipshit :P ^^^ just 6 lines
             Console.WriteLine($"{browser.Url}");
             Console.WriteLine("End...");
             Console.ReadKey();
