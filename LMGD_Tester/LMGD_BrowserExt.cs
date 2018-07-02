@@ -30,14 +30,14 @@ namespace LMGD_Tester
 
         /// <summary>
         /// Injects, clicks, then goes to user specified link. Link is injected via JavaScript into webpage. 
-        /// As of 6/21/2018 this is untested. 
+        /// As of 7/2/2018, unworking with chromeDriver (suspected) Receive invalid cast exception in converting Seleium.RemoteDriver to ChromeWebelement/IWebDriver (Can't remember which atm). 
         /// </summary>
         /// <param name="browser"></param>
         /// <param name="url"></param>
         public static void OpenUrlInNewTab(ChromeDriver browser, string url)
         {
             //Define JS script to inject link into DOM of current webpage
-            string script = "var d=document,a=d.createElement('a');a.target='_blank';a.href='" + url + "';a.innerHTML='.';d.body.appendChild(a);return a;";
+            string script = "var d=document,a=d.createElement('a');a.type='submit';a.name='customer_number';a.innerHTML='"+ url +"';d.body.appendChild(a);return a;";
             // Execute the script 
             ChromeWebElement element = (ChromeWebElement)browser.ExecuteScript(script);
             //Click the newly created link

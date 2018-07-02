@@ -16,34 +16,43 @@ namespace LMGD_Tester
     {
         static void Main(string[] args)
         {
+            //declare variables. 
+            string FOPS = "https://fops.amatechtel.com";
+            string Login = "/login.asp";
+            string AtaProvisioning = "/tools/ataprovisioning/";
+            string SuConfig = "/tools/su_config/default.asp";
+
             //init chrome browser
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
-            string FOPS = "https://fops.amatechtel.com";
-            string Login = "/login.asp";
-            string AtaProvisioning = "/tools/ataprovisioning/";
-            string SuConfig = "/tools/su_config/default.asp";
+
+            
             browser.Navigate().GoToUrl(FOPS + Login);
             var userID = browser.FindElementById("username");
             var pswd = browser.FindElementById("password");
             var login = browser.FindElementById("login_form");
             //dont' forget to reinput this shit :P
-            userID.SendKeys("");
-            pswd.SendKeys("");
+            userID.SendKeys("wchesley");
+            pswd.SendKeys("fuimdrunk1");
             login.Submit();
 
 
-            //browser.Navigate().GoToUrl(FOPS + AtaProvisioning);
+            //browser.Navigate().GoToUrl(FOPS + AtaProvisioning); 
+
             browser.Navigate().GoToUrl(FOPS + SuConfig);
 
             Console.WriteLine(browser.Url);
-
+            var custNumber = browser.FindElementByName("customer_number");
+            var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
+            custNumber.SendKeys("803689");
+            RadioForm.Submit();
             Console.ReadKey();
             OpenQA.Selenium.Support.UI.WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(browser, System.TimeSpan.FromSeconds(10));
             Thread.Sleep(150);
-
+            Console.WriteLine(browser.Url);
+            Console.ReadKey(); 
 
             //Func<IWebDriver, bool> waitForLogin = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
             //{
@@ -58,9 +67,9 @@ namespace LMGD_Tester
             //    return false;
             //});
             //wait.Until(waitForLogin);
+
             
-            var test = browser.FindElementById("div_3_contents");
-            //cannot seem to select input field directly will expirament with JS/Manually submitting the post request. 
+            
             
             //await table to load...
             Thread.Sleep(150);
