@@ -45,10 +45,11 @@ namespace LMGD_Tester
 
             Console.WriteLine(browser.Url);
             var custNumber = browser.FindElementByName("customer_number");
-            var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
+            var RadioForm = browser.FindElementsByName("B1");
+            //var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
             custNumber.SendKeys("803689");
-            RadioForm.Submit();
-            Console.ReadKey();
+            RadioForm[2].Submit();
+            //Console.ReadKey();
             OpenQA.Selenium.Support.UI.WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(browser, System.TimeSpan.FromSeconds(10));
             Thread.Sleep(150);
             Console.WriteLine(browser.Url);
@@ -73,9 +74,16 @@ namespace LMGD_Tester
             
             //await table to load...
             Thread.Sleep(150);
-            var RadioInTable = browser.FindElementByXPath("//*[@id='div_1_contents']/table/tbody/tr[2]/td[1]");
-            string RadioIP = RadioInTable.Text;
-            browser.Navigate().GoToUrl(RadioIP);
+            //Radio IP should always be first item in td for given table...will need to handle if multiple radios are presented. 
+            //again need to test via ping if radio is up or not. 
+            //need to determine radio type via webpage DOM 
+            var RadioTable = browser.FindElementByTagName("td");
+            Console.WriteLine(RadioTable.Text);
+
+            //logic to ping radio
+
+
+            browser.Navigate().GoToUrl(RadioTable.Text.ToString());
             Console.WriteLine(browser.Url);
             
             // logic to determine Radio type
