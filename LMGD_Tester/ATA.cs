@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LMGD_Tester
 {
-    class FOPS
+    class ATA
     {
         /// <summary>
         /// Redirects browser to FOPS login page, and logs in under specified user. Waits 100ms for redirect following login. 

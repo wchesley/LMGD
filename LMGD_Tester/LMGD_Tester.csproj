@@ -50,7 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FOPS.cs" />
+    <Compile Include="ATA.cs" />
     <Compile Include="LMGD_BrowserExt.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
