@@ -46,8 +46,8 @@ namespace LMGD_Tester
             var pswd = browser.FindElementById("password");
             var login = browser.FindElementById("login_form");
             //dont' forget to reinput this shit :P
-            userID.SendKeys("wchesley");
-            pswd.SendKeys("fuimdrunk1");
+            userID.SendKeys("");
+            pswd.SendKeys("");
             login.Submit();
 
 

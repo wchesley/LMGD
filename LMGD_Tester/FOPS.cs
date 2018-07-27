@@ -49,7 +49,7 @@ namespace LMGD_Tester
         {
             if (browser.Url == FOPS_HomeUrl + FOPS_LoginUrl)
             {
-                FOPS_Login("wchesley", "fuimdrunk1", browser, FOPS_HomeUrl+FOPS_RadioUrl);
+                FOPS_Login("", "", browser, FOPS_HomeUrl+FOPS_RadioUrl);
             }
             else
             {
@@ -69,7 +69,7 @@ namespace LMGD_Tester
         {
             if (browser.Url == FOPS_HomeUrl + FOPS_LoginUrl)
             {
-                FOPS_Login("wchesley", "fuimdrunk1", browser, FOPS_HomeUrl + FOPS_RadioUrl);
+                FOPS_Login("", "", browser, FOPS_HomeUrl + FOPS_RadioUrl);
             }
             else
             {
