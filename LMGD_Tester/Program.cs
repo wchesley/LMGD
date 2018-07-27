@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -21,6 +22,17 @@ namespace LMGD_Tester
             string Login = "/login.asp";
             string AtaProvisioning = "/tools/ataprovisioning/";
             string SuConfig = "/tools/su_config/default.asp";
+            string username;
+            string password; 
+            try
+            {
+                XElement LMGD_Doc = XElement.Load(@""); 
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.ToString());
+            }
 
             //init chrome browser
             var chromeOptions = new ChromeOptions();

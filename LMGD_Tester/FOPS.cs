@@ -28,7 +28,7 @@ namespace LMGD_Tester
         public ChromeDriver FOPS_Login(string UserID, string password, ChromeDriver browser, string PrevURL)
         {
             
-            browser.Navigate().GoToUrl(FOPS_Home + FOPS_LoginUrl);
+            browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_LoginUrl);
             var userID = browser.FindElementById("username");
             var pswd = browser.FindElementById("password");
             var login = browser.FindElementById("login_form");
