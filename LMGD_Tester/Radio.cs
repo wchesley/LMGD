@@ -48,22 +48,23 @@ namespace LMGD_Tester
             string RadioFourFiftey = "quickform";
             string RadioWimax = "img_bg";
             string Radio_ePMP = "top-level-menu";
-            if(RadioType(RadioFourFiftey, browser) == true)
+            if (RadioType(RadioFourFiftey, browser) == true)
             {
-                //450 scraping logic
-               
+                ScrapeFourFifty(browser);
+
             }
             else if (RadioType(Radio_ePMP, browser) == true)
             {
-                // ePMP scraping logic
+                Scrape_ePMP(browser);
             }
-            else if(RadioType(RadioWimax, browser))
+            else if (RadioType(RadioWimax, browser) == true)
             {
-                // wimax scraping logic
+                ScrapeWimax(browser);
             }
             else
             {
-                Console.WriteLine($"Radio was not found or is not a 450, ePMP or 320 \nError code: {e.ToString()}");
+                //If going for VL, here would be the place to attempt telnet, but 450 & ePMP will accept telnet connection too. 
+                Console.WriteLine("Radio was not found or is not a 450, ePMP or 320. Try again or search manually");
             }
 
         }
@@ -79,6 +80,47 @@ namespace LMGD_Tester
                 return false; 
             }
             return true; 
+        }
+        public static string ScrapeFourFifty(ChromeDriver browser)
+        {
+            string scrapedData = "Nothing found";
+
+
+
+            return scrapedData; 
+        }
+        public static string Scrape_ePMP(ChromeDriver browser)
+        {
+            string scrapedData = "Nothing found";
+            var userId = browser.FindElementById("CanopyUsername");
+            var password = browser.FindElementById("CanopyPassword");
+            var login = browser.FindElementById("loginbutton");
+            userId.SendKeys("admin");
+            password.SendKeys("amatech1");
+            login.Submit();
+            string upTime = browser.FindElementById("UpTime").Text;
+            string RSSI = browser.FindElementById("PowerLevelOFDM").Text;
+            string SNR = browser.FindElementById("SignalToNoiseRatioSM").Text;
+
+            // go to reboot radio
+
+            browser.FindElementByXPath("//*[@id='menu']/a[2]").Submit();
+            browser.FindElementByName("reboot").Submit();
+            
+            //build string of Radio info prior to reboot. 
+            scrapedData = $"Uptime: {upTime}\n";
+            scrapedData += $"RSSI: {RSSI}\n";
+            scrapedData += $"SNR: {SNR}";
+
+            return scrapedData;
+        }
+        public static string ScrapeWimax(ChromeDriver browser)
+        {
+            string scrapedData = "Nothing found";
+
+
+
+            return scrapedData;
         }
     }
 }
