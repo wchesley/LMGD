@@ -24,15 +24,17 @@ namespace LMGD_Tester
             string SuConfig = "/tools/su_config/default.asp";
             string username;
             string password; 
-            try
-            {
-                XElement LMGD_Doc = XElement.Load(@""); 
-            }
-            catch (Exception e)
-            {
 
-                Console.WriteLine(e.ToString());
-            }
+            // attempt to load sensitive info from local xml file. 
+          
+            XElement LMGD_Doc = XElement.Load(@"C:\Users\Walker\Documents\LMGD_Data.xml");
+            username = LMGD_Doc.Element("username").Value;
+            password = LMGD_Doc.Element("password").Value;
+
+
+            Console.WriteLine("pulled from xml: " + username);
+            Console.WriteLine("pulled from xml: " + password);
+            Console.ReadKey(); 
 
             //init chrome browser
             var chromeOptions = new ChromeOptions();
@@ -46,8 +48,8 @@ namespace LMGD_Tester
             var pswd = browser.FindElementById("password");
             var login = browser.FindElementById("login_form");
             //dont' forget to reinput this shit :P
-            userID.SendKeys("");
-            pswd.SendKeys("");
+            userID.SendKeys(username);
+            pswd.SendKeys(password);
             login.Submit();
 
 
