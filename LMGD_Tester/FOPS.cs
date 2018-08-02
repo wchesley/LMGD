@@ -78,5 +78,22 @@ namespace LMGD_Tester
             Thread.Sleep(100);
             return browser;
         }
+
+        //pasting junk here cause i don't wann delete it
+        //browser.Navigate().GoToUrl(FOPS + Login);
+        //var userID = browser.FindElementById("username");
+        //var pswd = browser.FindElementById("password");
+        //var login = browser.FindElementById("login_form");
+        ////dont' forget to reinput this shit :P
+        //userID.SendKeys(username);
+        //    pswd.SendKeys(password);
+        //    login.Submit();
+
+
+        //    //browser.Navigate().GoToUrl(FOPS + AtaProvisioning); 
+
+        //    browser.Navigate().GoToUrl(FOPS + SuConfig);
+
+
     }
 }

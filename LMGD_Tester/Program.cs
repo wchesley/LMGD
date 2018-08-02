@@ -42,22 +42,34 @@ namespace LMGD_Tester
             var browser = new ChromeDriver(chromeOptions);
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
 
-            
-            browser.Navigate().GoToUrl(FOPS + Login);
-            var userID = browser.FindElementById("username");
-            var pswd = browser.FindElementById("password");
-            var login = browser.FindElementById("login_form");
-            //dont' forget to reinput this shit :P
-            userID.SendKeys(username);
-            pswd.SendKeys(password);
+            browser.Navigate().GoToUrl("http://172.16.98.161");
+            string scrapedData = "Nothing found";
+            var userId = browser.FindElementById("CanopyUsername");
+            var Radiopassword = browser.FindElementById("CanopyPassword");
+            var login = browser.FindElementById("loginbutton");
+            userId.SendKeys("admin");
+            Radiopassword.SendKeys("amatech1");
             login.Submit();
+            string upTime = browser.FindElementById("UpTime").Text;
+            string RSSI = browser.FindElementById("PowerLevelOFDM").Text;
+            string SNR = browser.FindElementById("SignalToNoiseRatioSM").Text;
 
+            // go to reboot radio
 
-            //browser.Navigate().GoToUrl(FOPS + AtaProvisioning); 
-
-            browser.Navigate().GoToUrl(FOPS + SuConfig);
-
+            browser.FindElementsByClassName("menu")[2].Click();
+            Thread.Sleep(100);
+            //var wtf = browser.PageSource;
+            //Console.WriteLine(wtf.ToString());
             
+            browser.FindElementById("firstform").Submit();
+
+            //build string of Radio info prior to reboot. 
+            scrapedData = $"Uptime: {upTime}\n";
+            scrapedData += $"RSSI: {RSSI}\n";
+            scrapedData += $"SNR: {SNR}";
+
+            Console.WriteLine(scrapedData);
+
             Console.WriteLine("End...");
             Console.ReadKey();
         }
