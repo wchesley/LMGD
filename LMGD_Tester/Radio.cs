@@ -91,28 +91,54 @@ namespace LMGD_Tester
         }
         public static string Scrape_ePMP(ChromeDriver browser)
         {
-            string scrapedData = "Nothing found";
+            //string scrapedData = "Nothing found";
             var userId = browser.FindElementById("CanopyUsername");
             var password = browser.FindElementById("CanopyPassword");
             var login = browser.FindElementById("loginbutton");
             userId.SendKeys("admin");
             password.SendKeys("amatech1");
             login.Submit();
-            string upTime = browser.FindElementById("UpTime").Text;
-            string RSSI = browser.FindElementById("PowerLevelOFDM").Text;
-            string SNR = browser.FindElementById("SignalToNoiseRatioSM").Text;
-
-            // go to reboot radio
-
-            browser.FindElementByXPath("//*[@id='menu']/a[2]").Submit();
-            browser.FindElementByName("reboot").Submit();
             
-            //build string of Radio info prior to reboot. 
-            scrapedData = $"Uptime: {upTime}\n";
-            scrapedData += $"RSSI: {RSSI}\n";
-            scrapedData += $"SNR: {SNR}";
+            var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
+            var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
+            var ePMP_EthernetStatus = browser.FindElementsById[0]("alert-success").GetAttribute("title");
+            var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
+            var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
+            var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");
 
-            return scrapedData;
+            // reboot req handling popup
+            // ref stackoverflow: https://stackoverflow.com/questions/12744576/selenium-c-sharp-accept-confirm-box
+
+            browser.FindElementById("reboot_device").Click();
+            bool presentAlert = false; 
+            string JSAlertError = null; 
+            string RadioStats = null; 
+            try {
+	            var handleAlert = browser.SwitchTo().handleAlert();
+	            presentAlert = true;
+	            handleAlert.accept();
+                }
+            catch (Exception e)
+            {
+	            string JSAlertError = e.ToString();
+	            e.printStackTrace();
+            }
+            if (JSAlertError == nullorBlankSpace)
+            {
+            	return JSAlertError;
+            }
+            else{
+	            //Title's in ePMP radio are "preformated", will concantenate strings together and display. 
+	            RadioStats = $"{ePMPUptime.ToString()}\n";
+	            RadioStats += $"{ePMPRssi.ToString()}\n";
+	            RadioStats += $"{ePMPSNR.ToString()}\n";
+	            RadioStats += $"{ePMP_EthernetStatus.ToString()}\n";
+	            RadioStats += $"{ePMP_DlMod.ToString()}\n";
+	            RadioStats += $"{ePMP_ULMod.ToString()}\n";
+	            return RadioStats; 
+            }
+
+             //  return scrapedData;
         }
         public static string ScrapeWimax(ChromeDriver browser)
         {
