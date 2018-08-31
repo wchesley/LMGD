@@ -143,7 +143,7 @@ namespace LMGD_Tester
             
             var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
             var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
-            var ePMP_EthernetStatus = browser.FindElementsById[0]("alert-success").GetAttribute("title");
+            var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
             var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
             var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
             var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");

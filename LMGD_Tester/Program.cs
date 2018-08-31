@@ -55,14 +55,20 @@ namespace LMGD_Tester
             string SNR = browser.FindElementById("SignalToNoiseRatioSM").Text;
 
             // go to reboot radio
-
-            browser.FindElementsByClassName("menu")[2].Click();
+            // xpath: //*[@id="menu"]/a[2]
             Thread.Sleep(100);
-            //var wtf = browser.PageSource;
-            //Console.WriteLine(wtf.ToString());
-            
-            browser.FindElementById("firstform").Submit();
+            browser.FindElementsByClassName("menu")[2].Click();
+            //browser.FindElementByXPath("*[@id='menu']/a[2]").Click();
+            Thread.Sleep(100);
 
+            var wtf = browser.PageSource;
+            Console.WriteLine(wtf.ToString());
+
+
+            //"reboot" button doesn't appear headlessly, will build manullly via JS and inject into webpage. 
+            // 
+            //browser.FindElementByName("reboot");
+            string JavaScriptInjection = "var d=document, a=d.createElement("; 
             //build string of Radio info prior to reboot. 
             scrapedData = $"Uptime: {upTime}\n";
             scrapedData += $"RSSI: {RSSI}\n";
