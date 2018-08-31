@@ -81,54 +81,60 @@ namespace LMGD_Tester
             }
             return true; 
         }
+
+
+        //450 Radio scraping logi 
         public static string ScrapeFourFifty(ChromeDriver browser)
         {
-		string scrapedData = "Nothing found";
-	 /*Shit list:  
-	#1 finding/Navigating to correct page...might try via <a> element array
-	#2 Rebooting the radio, button does not load in headless chrome browser .
-	#3 who knows, but I'm sure I'll find something. 
-	*/
-
-	/*
-	IDEA FOR NAVIGATING 450 Radio
-	for whatever freaking reason, 450's combine this data as it's webpages
-	order: /main.cgi?mac_esn=0a003e433075 &catindex=1& pageindex=0& ession=1481765933
-	alt method of navigation would be to build the url's each time, just change the values to garuntee we get where we are wanting to go. 
-	<input type="hidden" name="mac_esn" value="0a003e41ad1e" id="mac_esn">
-	<input type="hidden" name="catindex" value="1" id="catindex">
-	<input type="hidden" name="pageindex" value="0" id="pageindex">
-	<input type="hidden" name="Session" value="1191391529" id="Session">
-	*/
 
 
-	var 450_Links = FindElementsByTag("a");
-	foreach link in 450_Links
-	{
-		if (link.Text == "Configuration")
-		{
-			browser.Click();
-			Thread.Sleep(100);
-			string Reboot450_JS = "var reboot = document.createElement('input'); ";
-			Reboot450_JS += "reboot.type = 'submit'; ";
-			Reboot450_JS += "reboot.value = 'Reboot'; ";
-			Reboot450_JS += "reboot.name = 'reboot'; ";
-			Reboot450_JS += "reboot.id = 'MyRoboBooter'";
-			Reboot450_JS += "document.body.appendChild(reboot);";
-			browser.FindElementById("MyRoboBooter").Click;
-		}
-	}
+            /*Shit list:  
+           #1 finding/Navigating to correct page...might try via <a> element array
+           #2 Rebooting the radio, button does not load in headless chrome browser .
+           #3 who knows, but I'm sure I'll find something. 
+           */
 
-	var 450_Stats = $"Uptime: {450_Uptime}\n";
-	450_Stats += $"RSSI: {450_Rssi}\n";
-	450_Stats += $"SNR: {450_Snr}\n";
-	450_Stats += $"Ethernet Status: {450_EthernetStats}"; 
-	return 450_Stats;
-	
+            /*
+            IDEA FOR NAVIGATING 450 Radio
+            for whatever freaking reason, 450's combine this data as it's webpages
+            order: /main.cgi?mac_esn=0a003e433075 &catindex=1& pageindex=0& ession=1481765933
+            alt method of navigation would be to build the url's each time, just change the values to garuntee we get where we are wanting to go. 
+            <input type="hidden" name="mac_esn" value="0a003e41ad1e" id="mac_esn">
+            <input type="hidden" name="catindex" value="1" id="catindex">
+            <input type="hidden" name="pageindex" value="0" id="pageindex">
+            <input type="hidden" name="Session" value="1191391529" id="Session">
+            */
+            var FourFifty_Uptime = browser.FindElementById("UpTime");
+            var FourFifty_EthernetStats = browser.FindElementById("LinkStatusMain");
+            var FourFifty_Rssi = browser.FindElementById("PowerLevelOFDM");
+            var FourFifty_Snr = browser.FindElementById("SignalToNoiseRatioSM"); 
 
-            return scrapedData; 
-        }
+            var FourFifty_Links = browser.FindElementsByTagName("a");
+	        foreach (var link in FourFifty_Links)
+	        {
+		        if (link.Text == "Configuration")
+		        {
+                    link.Click(); 
+			        Thread.Sleep(100);
+			        string Reboot450_JS = "var reboot = document.createElement('input'); ";
+			        Reboot450_JS += "reboot.type = 'submit'; ";
+			        Reboot450_JS += "reboot.value = 'Reboot'; ";
+			        Reboot450_JS += "reboot.name = 'reboot'; ";
+			        Reboot450_JS += "reboot.id = 'MyRoboBooter'";
+			        Reboot450_JS += "document.body.appendChild(reboot);";
+			        var rebootHelper = browser.FindElementById("MyRoboBooter");
+                    rebootHelper.Click();
+		        }
+	        }   
+
+	    var FourFifty_Stats = $"Uptime: {FourFifty_Uptime}\n";
+	    FourFifty_Stats += $"RSSI: {FourFifty_Rssi}\n";
+	    FourFifty_Stats += $"SNR: {FourFifty_Snr}\n";
+        FourFifty_Stats += $"Ethernet Status: {FourFifty_EthernetStats}"; 
+	    return FourFifty_Stats;
+	    }
 	    
+
 	 // ePMP Radio Scraping Logic: 
 	    
         public static string Scrape_ePMP(ChromeDriver browser)
@@ -143,7 +149,7 @@ namespace LMGD_Tester
             
             var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
             var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
-            var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
+            //var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
             var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
             var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
             var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");
@@ -156,29 +162,25 @@ namespace LMGD_Tester
             string JSAlertError = null; 
             string RadioStats = null; 
             try {
-	            var handleAlert = browser.SwitchTo().handleAlert();
+	            var handleAlert = browser.SwitchTo().Alert();
 	            presentAlert = true;
-	            handleAlert.accept();
+                handleAlert.Accept();
                 }
             catch (Exception e)
             {
-	            string JSAlertError = e.ToString();
-	            e.printStackTrace();
+	            JSAlertError = e.ToString();
+                Console.WriteLine(e.StackTrace);
             }
-            if (JSAlertError == nullorBlankSpace)
-            {
-            	return JSAlertError;
-            }
-            else{
-	            //Title's in ePMP radio are "preformated", will concantenate strings together and display. 
+            
+	             //Title's in ePMP radio are "preformated", will concantenate strings together and display. 
 	            RadioStats = $"{ePMPUptime.ToString()}\n";
 	            RadioStats += $"{ePMPRssi.ToString()}\n";
 	            RadioStats += $"{ePMPSNR.ToString()}\n";
-	            RadioStats += $"{ePMP_EthernetStatus.ToString()}\n";
+	            //RadioStats += $"{ePMP_EthernetStatus.ToString()}\n";
 	            RadioStats += $"{ePMP_DlMod.ToString()}\n";
 	            RadioStats += $"{ePMP_ULMod.ToString()}\n";
 	            return RadioStats; 
-            }
+            
 
              //  return scrapedData;
         }
