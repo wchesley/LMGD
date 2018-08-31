@@ -83,12 +83,54 @@ namespace LMGD_Tester
         }
         public static string ScrapeFourFifty(ChromeDriver browser)
         {
-            string scrapedData = "Nothing found";
+		string scrapedData = "Nothing found";
+	 /*Shit list:  
+	#1 finding/Navigating to correct page...might try via <a> element array
+	#2 Rebooting the radio, button does not load in headless chrome browser .
+	#3 who knows, but I'm sure I'll find something. 
+	*/
+
+	/*
+	IDEA FOR NAVIGATING 450 Radio
+	for whatever freaking reason, 450's combine this data as it's webpages
+	order: /main.cgi?mac_esn=0a003e433075 &catindex=1& pageindex=0& ession=1481765933
+	alt method of navigation would be to build the url's each time, just change the values to garuntee we get where we are wanting to go. 
+	<input type="hidden" name="mac_esn" value="0a003e41ad1e" id="mac_esn">
+	<input type="hidden" name="catindex" value="1" id="catindex">
+	<input type="hidden" name="pageindex" value="0" id="pageindex">
+	<input type="hidden" name="Session" value="1191391529" id="Session">
+	*/
 
 
+	var 450_Links = FindElementsByTag("a");
+	foreach link in 450_Links
+	{
+		if (link.Text == "Configuration")
+		{
+			browser.Click();
+			Thread.Sleep(100);
+			string Reboot450_JS = "var reboot = document.createElement('input'); ";
+			Reboot450_JS += "reboot.type = 'submit'; ";
+			Reboot450_JS += "reboot.value = 'Reboot'; ";
+			Reboot450_JS += "reboot.name = 'reboot'; ";
+			Reboot450_JS += "reboot.id = 'MyRoboBooter'";
+			Reboot450_JS += "document.body.appendChild(reboot);";
+			browser.FindElementById("MyRoboBooter").Click;
+		}
+	}
+
+	var 450_Stats = $"Uptime: {450_Uptime}\n";
+	450_Stats += $"RSSI: {450_Rssi}\n";
+	450_Stats += $"SNR: {450_Snr}\n";
+	450_Stats += $"Ethernet Status: {450_EthernetStats}"; 
+	return 450_Stats;
+	
 
             return scrapedData; 
         }
+	    
+	 // ePMP Radio Scraping Logic: 
+	    
         public static string Scrape_ePMP(ChromeDriver browser)
         {
             //string scrapedData = "Nothing found";
