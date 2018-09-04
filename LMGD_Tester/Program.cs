@@ -64,28 +64,7 @@ namespace LMGD_Tester
             Thread.Sleep(100);
             var rebootTestForm = browser.FindElementById("reboot");
             rebootTestForm.Click();
-            ////Inject JS to reboot radio, the button doens't appear on headless browser. 
-            ////Hitting JS syntax error? shouldn't be...
-            ////I can add button manually in console, but onClick Doesn nothing, just blank button. 
-            //string Reboot450_JS = "var reboot = document.createElement('input'); ";
-            //Reboot450_JS += "reboot.type = 'submit'; ";
-            //Reboot450_JS += "reboot.value = 'Reboot'; ";
-            //Reboot450_JS += "reboot.name = 'reboot'; ";
-            //Reboot450_JS += "reboot.id = 'MyRoboBooter'";
-            //Reboot450_JS += "document.body.appendChild(reboot);";
-            //browser.ExecuteAsyncScript(Reboot450_JS);
-            //Thread.Sleep(100);
-            //var rebootHelper = browser.FindElementById("MyRoboBooter");
-            //rebootHelper.Click();
-            var wtf = browser.PageSource;
-            Console.WriteLine(wtf.ToString());
             
-
-            //"reboot" button doesn't appear headlessly, will build manullly via JS and inject into webpage. 
-            // 
-            //browser.FindElementByName("reboot");
-            string JavaScriptInjection = "var d=document, a=d.createElement("; 
-            //build string of Radio info prior to reboot. 
             scrapedData = $"Uptime: {upTime}\n";
             scrapedData += $"RSSI: {RSSI}\n";
             scrapedData += $"SNR: {SNR}";

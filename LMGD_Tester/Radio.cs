@@ -107,27 +107,15 @@ namespace LMGD_Tester
             var FourFifty_Uptime = browser.FindElementById("UpTime");
             var FourFifty_EthernetStats = browser.FindElementById("LinkStatusMain");
             var FourFifty_Rssi = browser.FindElementById("PowerLevelOFDM");
-            var FourFifty_Snr = browser.FindElementById("SignalToNoiseRatioSM"); 
+            var FourFifty_Snr = browser.FindElementById("SignalToNoiseRatioSM");
 
-            var FourFifty_Links = browser.FindElementsByTagName("a");
-	        foreach (var link in FourFifty_Links)
-	        {
-		        if (link.Text == "Configuration")
-		        {
-                    link.Click(); 
-			        Thread.Sleep(100);
-			        string Reboot450_JS = "var reboot = document.createElement('input'); ";
-			        Reboot450_JS += "reboot.type = 'submit'; ";
-			        Reboot450_JS += "reboot.value = 'Reboot'; ";
-			        Reboot450_JS += "reboot.name = 'reboot'; ";
-			        Reboot450_JS += "reboot.id = 'MyRoboBooter'";
-			        Reboot450_JS += "document.body.appendChild(reboot);";
-			        var rebootHelper = browser.FindElementById("MyRoboBooter");
-                    rebootHelper.Click();
-		        }
-	        }   
+            //Tested and working code to find & reboot 450 Radio
+            browser.FindElementsByClassName("menu")[1].Click();
+            Thread.Sleep(100);
+            var rebootTestForm = browser.FindElementById("reboot");
+            rebootTestForm.Click();
 
-	    var FourFifty_Stats = $"Uptime: {FourFifty_Uptime}\n";
+            var FourFifty_Stats = $"Uptime: {FourFifty_Uptime}\n";
 	    FourFifty_Stats += $"RSSI: {FourFifty_Rssi}\n";
 	    FourFifty_Stats += $"SNR: {FourFifty_Snr}\n";
         FourFifty_Stats += $"Ethernet Status: {FourFifty_EthernetStats}"; 
