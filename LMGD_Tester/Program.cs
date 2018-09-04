@@ -59,7 +59,8 @@ namespace LMGD_Tester
             Thread.Sleep(100);
             
             //browser.FindElementByXPath("*[@id='menu']/a[2]").Click();
-         browser.FindElementsByClassName("menu")[2].Click();   Thread.Sleep(100);
+            browser.FindElementsByClassName("menu")[2].Click();   
+            Thread.Sleep(100);
 
             var wtf = browser.PageSource;
             Console.WriteLine(wtf.ToString());
