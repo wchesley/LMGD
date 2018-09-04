@@ -76,14 +76,14 @@ namespace LMGD_Tester
             }
             catch (NoSuchElementException e)
             {
-                //Console.WriteLine($"Radio was not found or is not a 450, ePMP or 320 \nError code: {e.ToString()}");
+                Console.WriteLine($"Radio was not found or is not a 450, ePMP or 320 \nError code: {e.ToString()}");
                 return false; 
             }
             return true; 
         }
 
 
-        //450 Radio scraping logi 
+        //450 Radio scraping logic
         public static string ScrapeFourFifty(ChromeDriver browser)
         {
 
@@ -186,33 +186,33 @@ namespace LMGD_Tester
         }
         public static string ScrapeWimax(ChromeDriver browser)
         {
-          /* WIMAX RADIOS
-	  test IP: 172.28.151.210
-	  Shit list: 
-	  Rebooting: can call via Js on ajaxReboot();
-	  */
+            /* WIMAX RADIOS
+	        test IP: 172.28.151.210
+	        Shit list: 
+	        Rebooting: can call via Js on ajaxReboot();
+	        */
 
-	  var login = browser.FindElementByName("login_form");
-	  var usrID = browser.FindElementByName("username");
-	  var pwd = browser.FindElementByName("passwd"); 
-
-
-	  var UpTime = browser.FindElementById("ssUptime").Text;
-	  var Rssi = browser.FindElementById("RSSI").Text;
-	  var Cinr = browser.FindElementById("CINR").Text;
-	  var ulMod = browser.FindElementById("ulMod");
-	  var dlMod = browser.FindElementById("dlMod");
+	        var login = browser.FindElementByName("login_form");
+	        var usrID = browser.FindElementByName("username");
+	        var pwd = browser.FindElementByName("passwd"); 
 
 
+	        var UpTime = browser.FindElementById("ssUptime").Text;
+	        var Rssi = browser.FindElementById("RSSI").Text;
+	        var Cinr = browser.FindElementById("CINR").Text;
+	        var ulMod = browser.FindElementById("ulMod");
+	        var dlMod = browser.FindElementById("dlMod");
 
 
-	  // string builder: 
 
-	  var WimaxRadio = $"Uptime: {UpTime}\n";
-	  var WimaxRadio += $"RSSI: {Rssi}\n";
-	  var WimaxRadio += $"CINR: {Cinr}\n";
-	  var WimaxRadio += $"Mods Up/Dwn: {ulMod} / {dlMod}\n Rebooted Radio";
-	  return WimaxRadio; 
+
+	        // string builder: 
+
+	        var WimaxRadio = $"Uptime: {UpTime}\n";
+	        WimaxRadio += $"RSSI: {Rssi}\n";
+	        WimaxRadio += $"CINR: {Cinr}\n";
+	        WimaxRadio += $"Mods Up/Dwn: {ulMod} / {dlMod}\n Rebooted Radio";
+	        return WimaxRadio; 
         }
     }
 }
