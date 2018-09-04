@@ -186,11 +186,33 @@ namespace LMGD_Tester
         }
         public static string ScrapeWimax(ChromeDriver browser)
         {
-            string scrapedData = "Nothing found";
+          /* WIMAX RADIOS
+	  test IP: 172.28.151.210
+	  Shit list: 
+	  Rebooting: can call via Js on ajaxReboot();
+	  */
+
+	  var login = browser.FindElementByName("login_form");
+	  var usrID = browser.FindElementByName("username");
+	  var pwd = browser.FindElementByName("passwd"); 
+
+
+	  var UpTime = browser.FindElementById("ssUptime").Text;
+	  var Rssi = browser.FindElementById("RSSI").Text;
+	  var Cinr = browser.FindElementById("CINR").Text;
+	  var ulMod = browser.FindElementById("ulMod");
+	  var dlMod = browser.FindElementById("dlMod");
 
 
 
-            return scrapedData;
+
+	  // string builder: 
+
+	  var WimaxRadio = $"Uptime: {UpTime}\n";
+	  var WimaxRadio += $"RSSI: {Rssi}\n";
+	  var WimaxRadio += $"CINR: {Cinr}\n";
+	  var WimaxRadio += $"Mods Up/Dwn: {ulMod} / {dlMod}\n Rebooted Radio";
+	  return WimaxRadio; 
         }
     }
 }
