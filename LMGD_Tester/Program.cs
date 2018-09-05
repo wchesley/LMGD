@@ -42,35 +42,54 @@ namespace LMGD_Tester
             var browser = new ChromeDriver(chromeOptions);
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
 
-            browser.Navigate().GoToUrl("http://172.16.98.161");
-            string scrapedData = "Nothing found";
-            var userId = browser.FindElementById("CanopyUsername");
-            var Radiopassword = browser.FindElementById("CanopyPassword");
-            var login = browser.FindElementById("loginbutton");
+            //Testing on: 172.28.70.184
+            browser.Navigate().GoToUrl("http://172.28.70.184/");
+            var userId = browser.FindElementByName("username");
+            var pwd = browser.FindElementByName("password");
+            var login = browser.FindElementById("loginBtn");
             userId.SendKeys("admin");
-            Radiopassword.SendKeys("amatech1");
-            login.Submit();
-            string upTime = browser.FindElementById("UpTime").Text;
-            string RSSI = browser.FindElementById("PowerLevelOFDM").Text;
-            string SNR = browser.FindElementById("SignalToNoiseRatioSM").Text;
+            pwd.SendKeys("amatech1");
+            login.Click();
 
-            // go to reboot radio
-            // xpath: //*[@id="menu"]/a[2]
             Thread.Sleep(100);
-            
-            //browser.FindElementByXPath("*[@id='menu']/a[2]").Click();
-            //FUCKING ARRAYS START COUNT AT 0 YA TWATWAFFEL!!!!! SHEESH LEWISH
-            browser.FindElementsByClassName("menu")[1].Click();   
-            Thread.Sleep(100);
-            var rebootTestForm = browser.FindElementById("reboot");
-            rebootTestForm.Click();
-            
-            scrapedData = $"Uptime: {upTime}\n";
-            scrapedData += $"RSSI: {RSSI}\n";
-            scrapedData += $"SNR: {SNR}";
+            var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
+            var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
+            //var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
+            var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
+            var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
+            var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");
 
-            Console.WriteLine(scrapedData);
+            // reboot req handling popup
+            // ref stackoverflow: https://stackoverflow.com/questions/12744576/selenium-c-sharp-accept-confirm-box
+            string pageSrc = browser.PageSource;
+            Console.WriteLine(pageSrc);
+            //Console.ReadKey();
+            ((IJavaScriptExecutor)browser).ExecuteScript("arguments[0].click();", browser.FindElementById("reboot_device"));
+            
 
+            string JSAlertError = null;
+            string RadioStats = null;
+            try
+            {
+                var handleAlert = browser.SwitchTo().Alert();
+
+                handleAlert.Accept();
+            }
+            catch (Exception e)
+            {
+                JSAlertError = e.ToString();
+                Console.WriteLine(e.StackTrace);
+            }
+
+            //Title's in ePMP radio are "preformated", will concantenate strings together and display. 
+            RadioStats = $"{ePMPUptime.ToString()}\n";
+            RadioStats += $"{ePMPRssi.ToString()}\n";
+            RadioStats += $"{ePMPSNR.ToString()}\n";
+            //RadioStats += $"{ePMP_EthernetStatus.ToString()}\n";
+            RadioStats += $"{ePMP_DlMod.ToString()}\n";
+            RadioStats += $"{ePMP_ULMod.ToString()}\n";
+
+            Console.WriteLine(RadioStats);
             Console.WriteLine("End...");
             Console.ReadKey();
         }

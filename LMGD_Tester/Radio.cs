@@ -104,10 +104,20 @@ namespace LMGD_Tester
             <input type="hidden" name="pageindex" value="0" id="pageindex">
             <input type="hidden" name="Session" value="1191391529" id="Session">
             */
-            var FourFifty_Uptime = browser.FindElementById("UpTime");
-            var FourFifty_EthernetStats = browser.FindElementById("LinkStatusMain");
-            var FourFifty_Rssi = browser.FindElementById("PowerLevelOFDM");
-            var FourFifty_Snr = browser.FindElementById("SignalToNoiseRatioSM");
+
+            //Login to Radio
+            var userId = browser.FindElementById("CanopyUsername");
+            var Radiopassword = browser.FindElementById("CanopyPassword");
+            var login = browser.FindElementById("loginbutton");
+            userId.SendKeys("admin");
+            Radiopassword.SendKeys("amatech1");
+            login.Submit();
+
+            //Gather Stats
+            var FourFifty_Uptime = browser.FindElementById("UpTime").Text;
+            var FourFifty_EthernetStats = browser.FindElementById("LinkStatusMain").Text;
+            var FourFifty_Rssi = browser.FindElementById("PowerLevelOFDM").Text;
+            var FourFifty_Snr = browser.FindElementById("SignalToNoiseRatioSM").Text;
 
             //Tested and working code to find & reboot 450 Radio
             browser.FindElementsByClassName("menu")[1].Click();
@@ -115,11 +125,12 @@ namespace LMGD_Tester
             var rebootTestForm = browser.FindElementById("reboot");
             rebootTestForm.Click();
 
+            //Return Stats
             var FourFifty_Stats = $"Uptime: {FourFifty_Uptime}\n";
-	    FourFifty_Stats += $"RSSI: {FourFifty_Rssi}\n";
-	    FourFifty_Stats += $"SNR: {FourFifty_Snr}\n";
-        FourFifty_Stats += $"Ethernet Status: {FourFifty_EthernetStats}"; 
-	    return FourFifty_Stats;
+            FourFifty_Stats += $"RSSI: {FourFifty_Rssi}\n";
+            FourFifty_Stats += $"SNR: {FourFifty_Snr}\n";
+            FourFifty_Stats += $"Ethernet Status: {FourFifty_EthernetStats}";
+            return FourFifty_Stats;
 	    }
 	    
 
@@ -127,6 +138,7 @@ namespace LMGD_Tester
 	    
         public static string Scrape_ePMP(ChromeDriver browser)
         {
+            //Testing on: 172.28.70.184
             //string scrapedData = "Nothing found";
             var userId = browser.FindElementById("CanopyUsername");
             var password = browser.FindElementById("CanopyPassword");
@@ -146,12 +158,12 @@ namespace LMGD_Tester
             // ref stackoverflow: https://stackoverflow.com/questions/12744576/selenium-c-sharp-accept-confirm-box
 
             browser.FindElementById("reboot_device").Click();
-            bool presentAlert = false; 
+             
             string JSAlertError = null; 
             string RadioStats = null; 
             try {
 	            var handleAlert = browser.SwitchTo().Alert();
-	            presentAlert = true;
+	            
                 handleAlert.Accept();
                 }
             catch (Exception e)
