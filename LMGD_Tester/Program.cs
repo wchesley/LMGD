@@ -38,12 +38,12 @@ namespace LMGD_Tester
 
             //init chrome browser
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\"); //@ home = 1 Default, work = 2 \Default
+            chromeOptions.AddArguments("headless","whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
             //Testing on: 172.28.70.184
-            browser.Navigate().GoToUrl("http://172.28.80.69/");
+            browser.Navigate().GoToUrl("http://172.28.80.61/");
             var userId = browser.FindElementByName("username");
             var pwd = browser.FindElementByName("password");
             var login = browser.FindElementById("loginBtn");
@@ -66,26 +66,32 @@ namespace LMGD_Tester
             userId.SendKeys("admin");// well it's not sendign username and pwd for 1...waduhek fam //readonly property via headless?
             pwd.SendKeys("amatech1");
             login.Click();
-            
-            
-            
-            
+            /******************************************************************************************
+             * Note for Error handling: 
+             * Max # of users: <span class="error-text">Maximum number of users reached.</span>
+             * Wrong Username/Password: <span class="error-text">Wrong username or password</span>
+            ******************************************************************************************/
+            ////*[@id="dl_rssi"]
+
+
             //Cannont locate this element by ID?...might not be logged in lawl, should check page source from chromedriver <- thar she blows sonnnn
+            Thread.Sleep(500);
             var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
-            
-            var ePMPSNR = browser.FindElementByClassName("dl_snr").GetAttribute("title");
+            var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
             //var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
             var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
             var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
             var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");
-
+            
             // reboot req handling popup
             // ref stackoverflow: https://stackoverflow.com/questions/12744576/selenium-c-sharp-accept-confirm-box
             string pageSrc = browser.PageSource;
             //Console.WriteLine(pageSrc);
             //Console.ReadKey();
-            //find & click reboot button, I hope?
-            browser.FindElementById("reboot_device").Click(); 
+            //find & click reboot button, currently not visible in DOM 
+            browser.FindElementByClassName("navbar-toggle").Click();
+            Thread.Sleep(500);
+            browser.FindElementById("reboot_device").Click();
             //((IJavaScriptExecutor)browser).ExecuteScript("arguments[0].click();", browser.FindElementById("reboot_device"));
             
 
