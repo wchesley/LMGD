@@ -43,17 +43,38 @@ namespace LMGD_Tester
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
 
             //Testing on: 172.28.70.184
-            browser.Navigate().GoToUrl("http://172.28.70.184/");
+            browser.Navigate().GoToUrl("http://172.28.80.69/");
             var userId = browser.FindElementByName("username");
             var pwd = browser.FindElementByName("password");
             var login = browser.FindElementById("loginBtn");
-            userId.SendKeys("admin");
-            pwd.SendKeys("amatech1");
-            login.Click();
+            var JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
 
+            //JS_Builder += "document.getElementById('loginBtn').click();";
+            //((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder);
+            JS_Builder += "arguments[0].removeAttribute('disabled');";
+            //JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
+            JS_Builder += "arguments[0].innerHTML = 'admin';";
+            
+            //JS_Builder += "document.getElementsByName('password').arguments[0].removeAttribute('disabled');";
+            ((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder,userId);
+            JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
+            JS_Builder += "arguments[0].removeAttribute('type','password');";
+            JS_Builder += "arguments[0].removeAttribute('disabled');";
+            JS_Builder += "arguments[0].innerHTML = 'amatech1';";
+            
+            ((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder, pwd);
+            //userId.SendKeys("admin");// well it's not sendign username and pwd for 1...waduhek fam //readonly property via headless?
+            //pwd.SendKeys("amatech1");
+            login.Click();
+            
+            Console.WriteLine(browser.PageSource);
+            Console.WriteLine("UserID AND PWD SENT: " + userId.Text + " " + pwd.Text);
+            Console.ReadKey();
             Thread.Sleep(100);
+            //Cannont locate this element by ID?...might not be logged in lawl, should check page source from chromedriver <- thar she blows sonnnn
             var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
-            var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
+            
+            var ePMPSNR = browser.FindElementByClassName("dl_snr").GetAttribute("title");
             //var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
             var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
             var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
@@ -62,13 +83,16 @@ namespace LMGD_Tester
             // reboot req handling popup
             // ref stackoverflow: https://stackoverflow.com/questions/12744576/selenium-c-sharp-accept-confirm-box
             string pageSrc = browser.PageSource;
-            Console.WriteLine(pageSrc);
+            //Console.WriteLine(pageSrc);
             //Console.ReadKey();
-            ((IJavaScriptExecutor)browser).ExecuteScript("arguments[0].click();", browser.FindElementById("reboot_device"));
+            //find & click reboot button, I hope?
+            browser.FindElementById("reboot_device").Click(); 
+            //((IJavaScriptExecutor)browser).ExecuteScript("arguments[0].click();", browser.FindElementById("reboot_device"));
             
 
             string JSAlertError = null;
             string RadioStats = null;
+            //Handle pop up asking us if we're sure we want to reboot, yes we are. 
             try
             {
                 var handleAlert = browser.SwitchTo().Alert();
