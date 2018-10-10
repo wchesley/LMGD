@@ -38,39 +38,38 @@ namespace LMGD_Tester
 
             //init chrome browser
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\"); //@ home = 1 Default, work = 2 \Default
+            chromeOptions.AddArguments("whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
-            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
             //Testing on: 172.28.70.184
             browser.Navigate().GoToUrl("http://172.28.80.69/");
             var userId = browser.FindElementByName("username");
             var pwd = browser.FindElementByName("password");
             var login = browser.FindElementById("loginBtn");
-            var JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
+            //var JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
 
-            //JS_Builder += "document.getElementById('loginBtn').click();";
-            //((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder);
-            JS_Builder += "arguments[0].removeAttribute('disabled');";
+            
+            ////((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder);
+            //JS_Builder += "arguments[0].removeAttribute('disabled');";
+            ////JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
+            //JS_Builder += "arguments[0].innerHTML = 'admin';";
+            
+            ////JS_Builder += "document.getElementsByName('password').arguments[0].removeAttribute('disabled');";
+            //((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder,userId);
             //JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
-            JS_Builder += "arguments[0].innerHTML = 'admin';";
-            
-            //JS_Builder += "document.getElementsByName('password').arguments[0].removeAttribute('disabled');";
-            ((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder,userId);
-            JS_Builder = "document.getElementById('login1').removeAttribute('class','readonly'); ";
-            JS_Builder += "arguments[0].removeAttribute('type','password');";
-            JS_Builder += "arguments[0].removeAttribute('disabled');";
-            JS_Builder += "arguments[0].innerHTML = 'amatech1';";
-            
-            ((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder, pwd);
-            //userId.SendKeys("admin");// well it's not sendign username and pwd for 1...waduhek fam //readonly property via headless?
-            //pwd.SendKeys("amatech1");
+            //JS_Builder += "arguments[0].removeAttribute('type','password');";
+            //JS_Builder += "arguments[0].removeAttribute('disabled');";
+            //JS_Builder += "arguments[0].innerHTML = 'amatech1';";
+            ////JS_Builder += "document.getElementById('loginBtn').click();";
+            //((IJavaScriptExecutor)browser).ExecuteScript(JS_Builder, pwd);
+            userId.SendKeys("admin");// well it's not sendign username and pwd for 1...waduhek fam //readonly property via headless?
+            pwd.SendKeys("amatech1");
             login.Click();
             
-            Console.WriteLine(browser.PageSource);
-            Console.WriteLine("UserID AND PWD SENT: " + userId.Text + " " + pwd.Text);
-            Console.ReadKey();
-            Thread.Sleep(100);
+            
+            
+            
             //Cannont locate this element by ID?...might not be logged in lawl, should check page source from chromedriver <- thar she blows sonnnn
             var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
             
