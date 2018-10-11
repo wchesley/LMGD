@@ -27,19 +27,12 @@ namespace LMGD_Tester
 
 
 
-            OpenQA.Selenium.Support.UI.WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(browser, System.TimeSpan.FromSeconds(10));
+            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
             //Verifies we're on ATA config page. 
-            Func<IWebDriver, bool> waitForLogin = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
-            {
-                Console.WriteLine("Awaiting Login...");
-                var pageTitle = webDriver.FindElement(By.Id("main_nav_tools_link"));
-                if (pageTitle.Displayed == true)
-                {
-                    return true;
-                }
-                return false;
-            });
-            wait.Until(waitForLogin);
+
+            Console.WriteLine("Awaiting Login...");
+                var pageTitle = browser.FindElement(By.Id("main_nav_tools_link"));
+                
 
             //input customer information. 
             var AccountNumberTxtBox = browser.FindElementById("search_foreign_id");
@@ -48,53 +41,32 @@ namespace LMGD_Tester
             searchATA.Click();
 
             // Need to handle: No ata found, multiple ata's found, and no connection to FOPS. 
-            Func<IWebDriver, bool> WaitForSearch = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
-            {
-                Console.WriteLine("Searching for ATA...");
-                var pageTitle = webDriver.FindElement(By.Id("search_results_div"));
-                if (pageTitle.Displayed)
-                {
-                    return true;
-                }
-                return false;
-            });
-            wait.Until(WaitForSearch);
+            
+            //TODO: 
+            /* 
+             * Grab All ATA's as list, if only one is found then assume it's the right one and use it. 
+             * Get ATA type from config page. then navigate control to the proper method. 
+             */
+            Console.WriteLine("Searching for ATA...");
+            var ATA = browser.FindElement(By.Id("search_results_div"));
+                
 
 
 
             
             //cust specific ata page is found by uniquie ata_id
-            string ataID = string.Empty;
+            
 
             //strange error searching this element. implicit/explicit waits won't work, attempting to resolve by sleeping the thread.
-            Thread.Sleep(150);
+            //Thread.Sleep(150);
+           
+            Console.WriteLine("Awaiting ATA page...");
+            var AtaID = browser.FindElement(By.ClassName("table_row"));
+               
 
-            OpenQA.Selenium.Support.UI.WebDriverWait waitTable = new OpenQA.Selenium.Support.UI.WebDriverWait(browser, System.TimeSpan.FromSeconds(10));
-            Func<IWebDriver, bool> WaitForATA = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
-            {
-                Console.WriteLine("Awaiting ATA page...");
-                var pageTitle = webDriver.FindElement(By.ClassName("table_row"));
-                ataID = pageTitle.GetAttribute("ata_id");
-                if (pageTitle.Displayed == true)
-                {
-                    pageTitle.Click();
-                    return true;
-                }
-                return false;
-            });
-            //Testing mat's...had trouble finding this "table_row" (slow load time) 
-            Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
-            try
-            {
-                waitTable.Until(WaitForATA);
-            }
-            catch
-            {
-                Console.WriteLine("Error finding Table_Row");
-            }
-
-            Console.WriteLine($"Searching for ATA: {ataID}");
-            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={ataID}");
+            Console.WriteLine($"Searching for ATA: {AtaID}");
+            //call search url directly as no clickable link in FOPS (lame af Jason)
+            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AtaID}");
 
 
             string whereAmI = browser.Url;
@@ -103,24 +75,15 @@ namespace LMGD_Tester
             Console.ReadKey();
             
             //await ATA IP address... 
-            Func<IWebDriver, bool> WaitForAtaIP = new Func<IWebDriver, bool>((IWebDriver webDriver) =>
-            {
-                Console.WriteLine("Awaiting ATA page...");
+            Console.WriteLine("Awaiting ATA page...");
 
-                var pageTitle = webDriver.FindElement(By.ClassName(" info "));
-                if (pageTitle.Displayed == true)
-                {
-                    pageTitle.Click();
-                    return true;
-                }
-                return false;
-            });
-            wait.Until(WaitForAtaIP);
+           var AtaIP = browser.FindElement(By.ClassName(" info "));
+                
             //Currntly working up to here, need to hangle migrating to ATA's webpage, ID'ing ATA type, getting information and rebooting ATA, also need to click "save Changes" on ata config page. 
 
             Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
             Console.ReadKey();
-            browser.SwitchTo().Window(browser.WindowHandles[3]);
+            browser.SwitchTo().Window(browser.WindowHandles[3]); //page[1] holds webpage, page [2] is Data; (?idk what this is really), page [3..n] are tabs we open. 
             Console.WriteLine("Success?");
             //TODO: log into ATA, get stats based on ATA Type and reboot ATA (Save config too). or what you wrote above dipshit :P ^^^ just 6 lines
             Console.WriteLine($"{browser.Url}");
