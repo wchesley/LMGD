@@ -40,12 +40,11 @@ namespace LMGD_Tester
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArguments("headless","whitelisted-ips=''", @"C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default\"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
-            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
 
-            //Testing on: 172.28.70.184
-            browser.Navigate().GoToUrl("http://172.28.80.61/");
             
-            Console.ReadKey();
+            browser.Navigate().GoToUrl("http://172.22.150.201");
+            
         }
     
     }

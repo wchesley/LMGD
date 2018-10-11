@@ -55,7 +55,7 @@ namespace LMGD_Tester
             }
             else if (RadioType(Radio_ePMP, browser) == true)
             {
-                Scrape_ePMP(browser);
+                Scrape_ePMP(browser, browser.Url.ToString());
             }
             else if (RadioType(RadioWimax, browser) == true)
             {
@@ -205,32 +205,23 @@ namespace LMGD_Tester
         public static string ScrapeWimax(ChromeDriver browser)
         {
             /* WIMAX RADIOS
+             * cannot get stats headlessly, will boot into graphical browser instead... 
 	        test IP: 172.28.151.210
 	        Shit list: 
 	        Rebooting: can call via Js on ajaxReboot();
+            slow transfer speeds - wireless connection, might need explicit waits might have insanly high ping too
 	        */
 
-	        var login = browser.FindElementByName("login_form");
-	        var usrID = browser.FindElementByName("username");
-	        var pwd = browser.FindElementByName("passwd"); 
-
-
-	        var UpTime = browser.FindElementById("ssUptime").Text;
-	        var Rssi = browser.FindElementById("RSSI").Text;
-	        var Cinr = browser.FindElementById("CINR").Text;
-	        var ulMod = browser.FindElementById("ulMod");
-	        var dlMod = browser.FindElementById("dlMod");
-
-
-
-
-	        // string builder: 
-
-	        var WimaxRadio = $"Uptime: {UpTime}\n";
-	        WimaxRadio += $"RSSI: {Rssi}\n";
-	        WimaxRadio += $"CINR: {Cinr}\n";
-	        WimaxRadio += $"Mods Up/Dwn: {ulMod} / {dlMod}\n Rebooted Radio";
-	        return WimaxRadio; 
+            var login = browser.FindElementByName("login_form");
+            var usrID = browser.FindElementByName("username");
+            var pwd = browser.FindElementByName("passwd");
+            usrID.SendKeys("administrator");
+            pwd.SendKeys("ama@dmin");
+            login.Submit();
+            ((IJavaScriptExecutor)browser).ExecuteScript("ajaxReboot();");
+            var WimaxRadio = "Wimax Rebooted \nEnd...";
+            Console.ReadKey();
+            return WimaxRadio; 
         }
     }
 }
