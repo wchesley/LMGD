@@ -22,19 +22,18 @@ namespace LMGD_Tester
         /// <param name="AccountNumber"></param>
         public static void GetAtaIp(ChromeDriver browser, string AccountNumber)
         {
+            //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/ataprovisioning/");
             Console.WriteLine(browser.Url);
 
-
-
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
-            //Verifies we're on ATA config page. 
+            //Verify we're on ATA config page. 
 
-            Console.WriteLine("Awaiting Login...");
-                var pageTitle = browser.FindElement(By.Id("main_nav_tools_link"));
+            //Console.WriteLine("Awaiting Login...");
+            //    var pageTitle = browser.FindElement(By.Id("main_nav_tools_link"));
                 
 
-            //input customer information. 
+            //Search for ATA: 
             var AccountNumberTxtBox = browser.FindElementById("search_foreign_id");
             var searchATA = browser.FindElementById("voip_search_submit_button");
             AccountNumberTxtBox.SendKeys(AccountNumber);
@@ -46,27 +45,29 @@ namespace LMGD_Tester
             /* 
              * Grab All ATA's as list, if only one is found then assume it's the right one and use it. 
              * Get ATA type from config page. then navigate control to the proper method. 
+             * Grab exact match on account number, select that ATA 
              */
             Console.WriteLine("Searching for ATA...");
             var ATA = browser.FindElement(By.Id("search_results_div"));
-                
 
-
-
-            
-            //cust specific ata page is found by uniquie ata_id
+            //cust specific ata page is found by unique ata_id
             
 
             //strange error searching this element. implicit/explicit waits won't work, attempting to resolve by sleeping the thread.
             //Thread.Sleep(150);
            
             Console.WriteLine("Awaiting ATA page...");
-            var AtaID = browser.FindElement(By.ClassName("table_row"));
-               
+            var AtaTable = browser.FindElementsByClassName("table_row");
+            var AtaSearchedDiv = browser.FindElementById("search_results_div");
+            if(AtaTable.Count == 0)
+            {
+                //Assume the first ata found is the correct one we're looking for... 
+                //Search customers in table, find correct ATA via attribute 'ata_id' must have explicit match
+            }
 
-            Console.WriteLine($"Searching for ATA: {AtaID}");
-            //call search url directly as no clickable link in FOPS (lame af Jason)
-            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AtaID}");
+            Console.WriteLine($"Searching for ATA: {AtaTable}");
+            //call search url directly as no 'clickable' link in FOPS (lame af Jason)
+            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AtaTable}");
 
 
             string whereAmI = browser.Url;
