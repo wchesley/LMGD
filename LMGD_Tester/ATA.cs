@@ -26,48 +26,51 @@ namespace LMGD_Tester
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/ataprovisioning/");
             Console.WriteLine(browser.Url);
 
-            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
-            //Verify we're on ATA config page. 
+            ////Verify we're on ATA config page. 
 
-            //Console.WriteLine("Awaiting Login...");
-            //    var pageTitle = browser.FindElement(By.Id("main_nav_tools_link"));
+            ////Console.WriteLine("Awaiting Login...");
+            ////    var pageTitle = browser.FindElement(By.Id("main_nav_tools_link"));
                 
 
-            //Search for ATA: 
-            var AccountNumberTxtBox = browser.FindElementById("search_foreign_id");
-            var searchATA = browser.FindElementById("voip_search_submit_button");
-            AccountNumberTxtBox.SendKeys(AccountNumber);
-            searchATA.Click();
+            ////Search for ATA: 
+            //var AccountNumberTxtBox = browser.FindElementById("search_foreign_id");
+            //var searchATA = browser.FindElementById("voip_search_submit_button");
+            //AccountNumberTxtBox.SendKeys(AccountNumber);
+            //searchATA.Click();
 
-            // Need to handle: No ata found, multiple ata's found, and no connection to FOPS. 
+            //// Need to handle: No ata found, multiple ata's found, and no connection to FOPS. 
             
-            //TODO: 
-            /* 
-             * Grab All ATA's as list, if only one is found then assume it's the right one and use it. 
-             * Get ATA type from config page. then navigate control to the proper method. 
-             * Grab exact match on account number, select that ATA 
-             */
-            Console.WriteLine("Searching for ATA...");
-            var ATA = browser.FindElement(By.Id("search_results_div"));
+            ////TODO: 
+            ///* 
+            // * Grab All ATA's as list, if only one is found then assume it's the right one and use it. 
+            // * Get ATA type from config page. then navigate control to the proper method. 
+            // * Grab exact match on account number, select that ATA 
+            // */
+            //Console.WriteLine("Searching for ATA...");
+            //var ATA = browser.FindElement(By.Id("search_results_div"));
 
-            //cust specific ata page is found by unique ata_id
+            ////cust specific ata page is found by unique ata_id
             
 
-            //strange error searching this element. implicit/explicit waits won't work, attempting to resolve by sleeping the thread.
-            //Thread.Sleep(150);
+            ////strange error searching this element. implicit/explicit waits won't work, attempting to resolve by sleeping the thread.
+            ////Thread.Sleep(150);
            
-            Console.WriteLine("Awaiting ATA page...");
-            var AtaTable = browser.FindElementsByClassName("table_row");
-            var AtaSearchedDiv = browser.FindElementById("search_results_div");
-            if(AtaTable.Count == 0)
-            {
-                //Assume the first ata found is the correct one we're looking for... 
-                //Search customers in table, find correct ATA via attribute 'ata_id' must have explicit match
-            }
+            //Console.WriteLine("Awaiting ATA page...");
+            //var AtaTable = browser.FindElementsByClassName("table_row");
+            //var AtaSearchedDiv = browser.FindElementById("search_results_div");
+            //Console.WriteLine($"Searching for ATA: {AtaTable}\n Found: {AtaTable.Count}");
+            
+            //foreach (var Ata in AtaTable)
+            //{
+            //    if (ATA.GetAttribute("ata_id") == AccountNumber)
+            //    {
 
-            Console.WriteLine($"Searching for ATA: {AtaTable}");
+            //    }
+            //}
+
+           
             //call search url directly as no 'clickable' link in FOPS (lame af Jason)
-            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AtaTable}");
+            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AccountNumber}");
 
 
             string whereAmI = browser.Url;
