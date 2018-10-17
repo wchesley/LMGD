@@ -23,76 +23,84 @@ namespace LMGD_Tester
         public static void GetAtaIp(ChromeDriver browser, string AccountNumber)
         {
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
-            browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/ataprovisioning/");
-            Console.WriteLine(browser.Url);
 
-            ////Verify we're on ATA config page. 
+            //Console.WriteLine(browser.Url);
+            string ATAError = "ATA not found in FOPS...try again or use different account number (External ID maybe?)";
 
-            ////Console.WriteLine("Awaiting Login...");
-            ////    var pageTitle = browser.FindElement(By.Id("main_nav_tools_link"));
-                
+            //browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AccountNumber}");
+            browser.FindElementById("search_foreign_id").SendKeys(AccountNumber);
+            browser.FindElementById("voip_search_submit_button").Click();
 
-            ////Search for ATA: 
-            //var AccountNumberTxtBox = browser.FindElementById("search_foreign_id");
-            //var searchATA = browser.FindElementById("voip_search_submit_button");
-            //AccountNumberTxtBox.SendKeys(AccountNumber);
-            //searchATA.Click();
 
-            //// Need to handle: No ata found, multiple ata's found, and no connection to FOPS. 
-            
-            ////TODO: 
-            ///* 
-            // * Grab All ATA's as list, if only one is found then assume it's the right one and use it. 
-            // * Get ATA type from config page. then navigate control to the proper method. 
-            // * Grab exact match on account number, select that ATA 
-            // */
-            //Console.WriteLine("Searching for ATA...");
-            //var ATA = browser.FindElement(By.Id("search_results_div"));
 
-            ////cust specific ata page is found by unique ata_id
-            
+            var ATA_Table = browser.FindElementByClassName("table_row");
+            var ATA_Rows = ATA_Table.FindElements(By.TagName("td"));
+            Console.WriteLine($"Found ATA Type: {ATA_Rows[2].Text}");
+            switch (ATA_Rows[2].Text)
+            {
+                //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is selected in DOM. 
 
-            ////strange error searching this element. implicit/explicit waits won't work, attempting to resolve by sleeping the thread.
-            ////Thread.Sleep(150);
-           
-            //Console.WriteLine("Awaiting ATA page...");
-            //var AtaTable = browser.FindElementsByClassName("table_row");
-            //var AtaSearchedDiv = browser.FindElementById("search_results_div");
-            //Console.WriteLine($"Searching for ATA: {AtaTable}\n Found: {AtaTable.Count}");
-            
-            //foreach (var Ata in AtaTable)
-            //{
-            //    if (ATA.GetAttribute("ata_id") == AccountNumber)
-            //    {
-
-            //    }
-            //}
-
-           
+                case "Cambium 200P":
+                case "Cambium R201P":
+                    Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
+                    //Call Cambium logic
+                    break;
+                case "Linksys SPA122":
+                    Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
+                    //Call Cisco SPA122 logic
+                    break;
+                case "Linksys SPA2102":
+                    Console.WriteLine("Found SPA2102, Attempting Login/Reboot but you might be fucked anyway lol it's a POS...");
+                    //Call SPA 2102 logic
+                    break;
+                default:
+                    Console.WriteLine(ATAError);
+                    break;
+            }
+            //Selecting First ATA found=0
+            ATA_Table.Click();
+            //Console.ReadKey();
             //call search url directly as no 'clickable' link in FOPS (lame af Jason)
-            browser.Navigate().GoToUrl($"http://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AccountNumber}");
 
-
+            browser.SwitchTo().Window(browser.WindowHandles[1]);
             string whereAmI = browser.Url;
+
             Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
             Console.WriteLine($"Browser Location, after 'searching' ata... {whereAmI}");
-            Console.ReadKey();
-            
+
+
             //await ATA IP address... 
             Console.WriteLine("Awaiting ATA page...");
 
-           var AtaIP = browser.FindElement(By.ClassName(" info "));
-                
-            //Currntly working up to here, need to hangle migrating to ATA's webpage, ID'ing ATA type, getting information and rebooting ATA, also need to click "save Changes" on ata config page. 
+            var AtaIP = browser.FindElementsByClassName("small_pad");
+            //Should save changes...
 
+
+
+
+            Console.WriteLine($"Saved changes clicked...{AtaIP[1].Text}");
+            AtaIP[1].Click();
+            Console.WriteLine($"Selecting ATA...{AtaIP[0].Text}");
+            AtaIP[0].Click();
             Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
-            Console.ReadKey();
-            browser.SwitchTo().Window(browser.WindowHandles[3]); //page[1] holds webpage, page [2] is Data; (?idk what this is really), page [3..n] are tabs we open. 
-            Console.WriteLine("Success?");
-            //TODO: log into ATA, get stats based on ATA Type and reboot ATA (Save config too). or what you wrote above dipshit :P ^^^ just 6 lines
-            Console.WriteLine($"{browser.Url}");
+
+            browser.SwitchTo().Window(browser.WindowHandles[2]); //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
             Console.WriteLine("End...");
             Console.ReadKey();
+        }
+        public static Boolean isAttributePresent(ChromeWebElement element, string Attribute)
+        {
+            Boolean isPresent = false;
+            try
+            {
+                string value = element.GetAttribute(Attribute);
+                if (value != null)
+                {
+                    isPresent = true;
+                }
+            }
+            catch (Exception e) { }
+            return isPresent;
         }
     }
 }
