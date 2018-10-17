@@ -24,6 +24,7 @@ namespace LMGD_Tester
             string SuConfig = "/tools/su_config/default.asp";
             string username;
             string password;
+            string AccountNumber = "";
             string ATAError = "ATA Error occured... ";
             FOPS FOPSPage = new FOPS(); 
             // attempt to load sensitive info from local xml file. 
@@ -47,10 +48,10 @@ namespace LMGD_Tester
             //browser.Navigate().GoToUrl(FOPS);
             //I'm getting redirected to login page? session issues?
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
-            
+
             //Console.WriteLine(browser.Url);
-            string AccountNumber = "308666";
-            
+            Console.WriteLine("Enter Account number: ");
+            AccountNumber = Console.ReadLine();
             //browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AccountNumber}");
             browser.FindElementById("search_foreign_id").SendKeys(AccountNumber);
             browser.FindElementById("voip_search_submit_button").Click();

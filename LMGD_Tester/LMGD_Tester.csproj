@@ -51,8 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATA.cs" />
+    <Compile Include="BrowserExt.cs" />
     <Compile Include="FOPS.cs" />
-    <Compile Include="LMGD_BrowserExt.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Radio.cs" />
