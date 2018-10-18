@@ -13,10 +13,10 @@ namespace LMGD_Tester
     class FOPS
     {
         //URL Building Strings: 
-        public string FOPS_HomeUrl = "https://fops.amatechtel.com";
-        public string FOPS_LoginUrl = "/login.asp";
-        public string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
-        public string FOPS_RadioUrl = "/tools/su_config/default.asp";
+        public const string FOPS_HomeUrl = "https://fops.amatechtel.com";
+        public const string FOPS_LoginUrl = "/login.asp";
+        public const string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
+        public const string FOPS_RadioUrl = "/tools/su_config/default.asp";
         
 
 
@@ -27,9 +27,10 @@ namespace LMGD_Tester
         /// <param name="UserID"></param>
         /// <param name="password"></param>
         /// <param name="browser"></param>
-        public ChromeDriver FOPS_Login(string UserID, string password, ChromeDriver browser, string PrevURL)
+        public ChromeDriver FOPS_Login(ChromeDriver browser, string PrevURL)
         {
-            
+            string UserID = "wchesley";
+            string password = "fuimdrunk1";
             browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_LoginUrl);
             var userID = browser.FindElementById("username");
             var pswd = browser.FindElementById("password");
@@ -137,7 +138,7 @@ namespace LMGD_Tester
             var GetRadio = new Radio();
             string Radio_Info = "";
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
-            if(browser.Url.ToString().Contains(FOPS_Login)==true)
+            if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
                 FOPS_Login(browser,FOPS_HomeUrl+FOPS_RadioUrl);
             }

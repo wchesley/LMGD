@@ -41,7 +41,7 @@ namespace LMGD_Tester
             //init chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
             //manually loggin in for testing sake. 
-            FOPSPage.FOPS_Login(username, password, browser, FOPS + AtaProvisioning);
+            FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
             //browser.Navigate().GoToUrl(FOPS);
             //I'm getting redirected to login page? session issues?
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
