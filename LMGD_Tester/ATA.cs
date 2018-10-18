@@ -13,7 +13,7 @@ namespace LMGD_Tester
     class ATA
     {
        
-        public string Cambium(ChromeDriver browser, string FoundATA)
+        public string Cambium(ChromeDriver browser)
         {
             //Browser should be looking at ATA page by now
             string ATAInfo = "";
@@ -21,12 +21,12 @@ namespace LMGD_Tester
             browser.FindElementById("password").SendKeys(".amaph0n3");
             return ATAInfo;
         }
-        public string Spa122(ChromeDriver browser, string FoundATA)
+        public string Spa122(ChromeDriver browser)
         {
             string ATAInfo = "";
             return ATAInfo;
         }
-        public string SPA2102(ChromeDriver browser, string FoundATA)
+        public string SPA2102(ChromeDriver browser)
         {
             string ATAInfo = "";
             return ATAInfo;

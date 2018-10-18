@@ -15,8 +15,8 @@ namespace LMGD_Tester
         //URL Building Strings: 
         public string FOPS_HomeUrl = "https://fops.amatechtel.com";
         public string FOPS_LoginUrl = "/login.asp";
-        string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
-        public string FOPS_RadioUrl = "";
+        public string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
+        public string FOPS_RadioUrl = "/tools/su_config/default.asp";
         
 
 
@@ -55,45 +55,45 @@ namespace LMGD_Tester
         public string GetAtaIp(ChromeDriver browser, string AccountNumber)
         {
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
-
+            //logic to search url and verify not on login page. 
             //Console.WriteLine(browser.Url);
             string ATAError = "ATA not found in FOPS...try again or use different account number (External ID maybe?)";
             string ATA_Info = "";
+            var GetATA = new ATA(); 
+            //Verify Logged into FOPS, then Search for ATA
             browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning");
+            if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
+            {
+                FOPS_Login(browser,FOPS_HomeUrl+FOPS_ATAUrl);
+            }
             browser.FindElementById("search_foreign_id").SendKeys(AccountNumber);
             browser.FindElementById("voip_search_submit_button").Click();
 
-
-
+            //TODO: Handle Multiple ATA's found. Need good way of verifiying we've selected the right customer
+            //Selects First ATA found in table
             var ATA_Table = browser.FindElementByClassName("table_row");
             var ATA_Rows = ATA_Table.FindElements(By.TagName("td"));
             Console.WriteLine($"Found ATA Type: {ATA_Rows[2].Text}");
-            
-            //Selecting First ATA found=0
             ATA_Table.Click();
-            //Console.ReadKey();
-            //call search url directly as no 'clickable' link in FOPS (lame af Jason)
-
+            
+            //ATA config page opens in new tab. cannot call URL dirctly. returns error
             browser.SwitchTo().Window(browser.WindowHandles[1]);
             string whereAmI = browser.Url;
-
             Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
             Console.WriteLine($"Browser Location, after 'searching' ata... {whereAmI}");
 
-
-            //await ATA IP address... 
-            Console.WriteLine("Awaiting ATA page...");
-
+            //Finding ATA's last known IP and Resetting it's config. 
             var AtaIP = browser.FindElementsByClassName("small_pad");
             //Should save changes...
-
-
-
-
             Console.WriteLine($"Saved changes clicked...{AtaIP[1].Text}");
             AtaIP[1].Click();
+            //Should have ATA IP
             Console.WriteLine($"Selecting ATA...{AtaIP[0].Text}");
             AtaIP[0].Click();
+            //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
+            browser.SwitchTo().Window(browser.WindowHandles[2]);
+            Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
+            whereAmI = browser.Url;
             switch (ATA_Rows[2].Text)
             {
                 //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is selected in DOM. 
@@ -101,25 +101,26 @@ namespace LMGD_Tester
                 case "Cambium 200P":
                 case "Cambium R201P":
                     Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
-                    //Call Cambium logic return to ATA_Info; 
+                    //Call Cambium logic return to ATA_Info;
+                    ATA_Info = GetATA.Cambium(browser);
                     break;
                 case "Linksys SPA122":
                     Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
                     //Call Cisco SPA122 logic
+                    ATA_Info = GetATA.Spa122(browser);
                     break;
                 case "Linksys SPA2102":
                     Console.WriteLine("Found SPA2102, Attempting Login/Reboot but you might be fucked anyway lol it's a POS...");
                     //Call SPA 2102 logic
+                    ATA_Info = GetATA.Spa2102(browser);
                     break;
                 default:
                     Console.WriteLine(ATAError);
                     break;
             }
-            Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
             
-            //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
-            browser.SwitchTo().Window(browser.WindowHandles[2]);
-            whereAmI = browser.Url;
+            
+            
             Console.WriteLine("End ATA...");
             
             return ATA_Info;
@@ -136,26 +137,26 @@ namespace LMGD_Tester
             var GetRadio = new Radio();
             string Radio_Info = "";
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
+            if(browser.Url.ToString().Contains(FOPS_Login)==true)
+            {
+                FOPS_Login(browser,FOPS_HomeUrl+FOPS_RadioUrl);
+            }
             var custNumber = browser.FindElementByName("customer_number");
             var RadioForm = browser.FindElementsByName("B1");
             //var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
             custNumber.SendKeys(customerNumber);
             RadioForm[2].Submit();
-            //Console.ReadKey();
-            OpenQA.Selenium.Support.UI.WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(browser, System.TimeSpan.FromSeconds(10));
+           
             Console.WriteLine(browser.Url);
-            Console.ReadKey();
 
 
-            //await table to load...
-            Thread.Sleep(150);
             //Radio IP should always be first item in td for given table...will need to handle if multiple radios are presented. 
             //again need to test via ping if radio is up or not. 
             //need to determine radio type via webpage DOM 
             var RadioTable = browser.FindElementByTagName("td");
             Console.WriteLine(RadioTable.Text);
 
-            //logic to ping radio
+            //logic to ping radio goes here. 
 
 
             browser.Navigate().GoToUrl(RadioTable.Text.ToString());
@@ -170,6 +171,7 @@ namespace LMGD_Tester
             string RadioFourFiftey = "quickform";
             string RadioWimax = "img_bg";
             string Radio_ePMP = "top-level-menu";
+            //need to rework logic to use IsAttributePresent Method from BrowserExt class. 
             if (RadioType(RadioFourFiftey, browser) == true)
             {
                Radio_Info = GetRadio.ScrapeFourFifty(browser);
@@ -186,7 +188,7 @@ namespace LMGD_Tester
             else
             {
                 //If going for VL, here would be the place to attempt telnet, but 450 & ePMP will accept telnet connection too. 
-                Radio_Info = "Radio was not found or is not a 450, ePMP or 320. Try again or search manually";
+                Radio_Info = "Radio was not found or is not a 450, ePMP or 320(Wimax). Try again or search manually";
             }
             return Radio_Info;
         }
@@ -202,6 +204,16 @@ namespace LMGD_Tester
                 return false;
             }
             return true;
+        }
+        public bool IsLoggedInFOPS (ChromeDriver broswer, string prevURL)
+        {
+            bool loggedIn = false; 
+            if(broswer.Url.ToString().Contains(FOPS_LoginUrl)==true)
+            {
+                FOPS_Login(broswer,prevURL);
+                loggedIn = true; 
+            }
+            return loggedIn; 
         }
         
 
