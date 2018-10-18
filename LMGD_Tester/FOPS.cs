@@ -68,27 +68,7 @@ namespace LMGD_Tester
             var ATA_Table = browser.FindElementByClassName("table_row");
             var ATA_Rows = ATA_Table.FindElements(By.TagName("td"));
             Console.WriteLine($"Found ATA Type: {ATA_Rows[2].Text}");
-            switch (ATA_Rows[2].Text)
-            {
-                //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is selected in DOM. 
-
-                case "Cambium 200P":
-                case "Cambium R201P":
-                    Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
-                    //Call Cambium logic return to ATA_Info; 
-                    break;
-                case "Linksys SPA122":
-                    Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
-                    //Call Cisco SPA122 logic
-                    break;
-                case "Linksys SPA2102":
-                    Console.WriteLine("Found SPA2102, Attempting Login/Reboot but you might be fucked anyway lol it's a POS...");
-                    //Call SPA 2102 logic
-                    break;
-                default:
-                    Console.WriteLine(ATAError);
-                    break;
-            }
+            
             //Selecting First ATA found=0
             ATA_Table.Click();
             //Console.ReadKey();
@@ -114,10 +94,34 @@ namespace LMGD_Tester
             AtaIP[1].Click();
             Console.WriteLine($"Selecting ATA...{AtaIP[0].Text}");
             AtaIP[0].Click();
-            Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
+            switch (ATA_Rows[2].Text)
+            {
+                //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is selected in DOM. 
 
-            browser.SwitchTo().Window(browser.WindowHandles[2]); //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
+                case "Cambium 200P":
+                case "Cambium R201P":
+                    Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
+                    //Call Cambium logic return to ATA_Info; 
+                    break;
+                case "Linksys SPA122":
+                    Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
+                    //Call Cisco SPA122 logic
+                    break;
+                case "Linksys SPA2102":
+                    Console.WriteLine("Found SPA2102, Attempting Login/Reboot but you might be fucked anyway lol it's a POS...");
+                    //Call SPA 2102 logic
+                    break;
+                default:
+                    Console.WriteLine(ATAError);
+                    break;
+            }
+            Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
+            
+            //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
+            browser.SwitchTo().Window(browser.WindowHandles[2]);
+            whereAmI = browser.Url;
             Console.WriteLine("End ATA...");
+            
             return ATA_Info;
         }
 

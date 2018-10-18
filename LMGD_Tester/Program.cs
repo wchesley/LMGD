@@ -50,7 +50,9 @@ namespace LMGD_Tester
             Console.WriteLine("Enter Account number: ");
             AccountNumber = Console.ReadLine();
             var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
-            var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber); 
+            var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
+            browser.Quit();
+            Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}");
         }
     
     }
