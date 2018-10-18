@@ -13,10 +13,12 @@ namespace LMGD_Tester
     class FOPS
     {
         //URL Building Strings: 
-        string FOPS_HomeUrl = "https://fops.amatechtel.com";
-        string FOPS_LoginUrl = "/login.asp";
+        public string FOPS_HomeUrl = "https://fops.amatechtel.com";
+        public string FOPS_LoginUrl = "/login.asp";
         string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
-        string FOPS_RadioUrl = "/tools/su_config/default.asp"; 
+        public string FOPS_RadioUrl = "";
+        
+
 
         /// <summary>
         /// Redirects browser to FOPS login page, and logs in under specified user. Waits 100ms for redirect following login.
@@ -50,14 +52,14 @@ namespace LMGD_Tester
         /// <param name="browser"></param>
         /// <param name="AccountNumber"></param>
         
-        public static void GetAtaIp(ChromeDriver browser, string AccountNumber)
+        public string GetAtaIp(ChromeDriver browser, string AccountNumber)
         {
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
 
             //Console.WriteLine(browser.Url);
             string ATAError = "ATA not found in FOPS...try again or use different account number (External ID maybe?)";
-
-            //browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning/modify.asp?ata_id={AccountNumber}");
+            string ATA_Info = "";
+            browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning");
             browser.FindElementById("search_foreign_id").SendKeys(AccountNumber);
             browser.FindElementById("voip_search_submit_button").Click();
 
@@ -73,7 +75,7 @@ namespace LMGD_Tester
                 case "Cambium 200P":
                 case "Cambium R201P":
                     Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
-                    //Call Cambium logic
+                    //Call Cambium logic return to ATA_Info; 
                     break;
                 case "Linksys SPA122":
                     Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
@@ -115,8 +117,8 @@ namespace LMGD_Tester
             Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
 
             browser.SwitchTo().Window(browser.WindowHandles[2]); //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
-            Console.WriteLine("End...");
-            Console.ReadKey();
+            Console.WriteLine("End ATA...");
+            return ATA_Info;
         }
 
         /// <summary>
@@ -125,34 +127,79 @@ namespace LMGD_Tester
         /// </summary>
         /// <param name="browser"></param>
         /// <returns></returns>
-        public ChromeDriver FOPS_Radio(ChromeDriver browser)
+        public string GetRadioIP(ChromeDriver browser, string customerNumber)
         {
-            if (browser.Url == FOPS_HomeUrl + FOPS_LoginUrl)
+            var GetRadio = new Radio();
+            string Radio_Info = "";
+            browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
+            var custNumber = browser.FindElementByName("customer_number");
+            var RadioForm = browser.FindElementsByName("B1");
+            //var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
+            custNumber.SendKeys(customerNumber);
+            RadioForm[2].Submit();
+            //Console.ReadKey();
+            OpenQA.Selenium.Support.UI.WebDriverWait wait = new OpenQA.Selenium.Support.UI.WebDriverWait(browser, System.TimeSpan.FromSeconds(10));
+            Console.WriteLine(browser.Url);
+            Console.ReadKey();
+
+
+            //await table to load...
+            Thread.Sleep(150);
+            //Radio IP should always be first item in td for given table...will need to handle if multiple radios are presented. 
+            //again need to test via ping if radio is up or not. 
+            //need to determine radio type via webpage DOM 
+            var RadioTable = browser.FindElementByTagName("td");
+            Console.WriteLine(RadioTable.Text);
+
+            //logic to ping radio
+
+
+            browser.Navigate().GoToUrl(RadioTable.Text.ToString());
+            Console.WriteLine(browser.Url);
+
+            // logic to determine Radio type / transfer browser along proper channel here: 
+            //ePMP test radio: 172.20.70.174
+            //450 test radio: 172.16.98.161
+            //WiMax test radio: 172.22.94.16
+            //VL ? debating...HA, no...no way
+
+            string RadioFourFiftey = "quickform";
+            string RadioWimax = "img_bg";
+            string Radio_ePMP = "top-level-menu";
+            if (RadioType(RadioFourFiftey, browser) == true)
             {
-                FOPS_Login("", "", browser, FOPS_HomeUrl + FOPS_RadioUrl);
+               Radio_Info = GetRadio.ScrapeFourFifty(browser);
+                
+            }
+            else if (RadioType(Radio_ePMP, browser) == true)
+            {
+                Radio_Info = GetRadio.Scrape_ePMP(browser, browser.Url.ToString());
+            }
+            else if (RadioType(RadioWimax, browser) == true)
+            {
+                Radio_Info = GetRadio.ScrapeWimax(browser);
             }
             else
             {
-                browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_RadioUrl);
+                //If going for VL, here would be the place to attempt telnet, but 450 & ePMP will accept telnet connection too. 
+                Radio_Info = "Radio was not found or is not a 450, ePMP or 320. Try again or search manually";
             }
-            Thread.Sleep(100);
-            return browser;
+            return Radio_Info;
         }
-
-        //pasting junk here cause i don't wann delete it
-        //browser.Navigate().GoToUrl(FOPS + Login);
-        //var userID = browser.FindElementById("username");
-        //var pswd = browser.FindElementById("password");
-        //var login = browser.FindElementById("login_form");
-        ////dont' forget to reinput this shit :P
-        //userID.SendKeys(username);
-        //    pswd.SendKeys(password);
-        //    login.Submit();
-
-
-        //    //browser.Navigate().GoToUrl(FOPS + AtaProvisioning); 
-
-        //    browser.Navigate().GoToUrl(FOPS + SuConfig);
+        public static bool RadioType(string id, ChromeDriver browser)
+        {
+            try
+            {
+                browser.FindElementById(id);
+            }
+            catch (NoSuchElementException e)
+            {
+                Console.WriteLine($"Radio was not found or is not a 450, ePMP or 320 \nError code: {e.ToString()}");
+                return false;
+            }
+            return true;
+        }
+        
 
 
     }

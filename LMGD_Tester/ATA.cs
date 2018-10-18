@@ -13,17 +13,17 @@ namespace LMGD_Tester
     class ATA
     {
        
-        public static string Cambium(ChromeDriver browser)
+        public string Cambium(ChromeDriver browser)
         {
             string ATAInfo = "";
             return ATAInfo;
         }
-        public static string Spa122(ChromeDriver browser)
+        public string Spa122(ChromeDriver browser)
         {
             string ATAInfo = "";
             return ATAInfo;
         }
-        public static string SPA2102(ChromeDriver browser)
+        public string SPA2102(ChromeDriver browser)
         {
             string ATAInfo = "";
             return ATAInfo;
