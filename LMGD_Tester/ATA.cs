@@ -39,8 +39,36 @@ namespace LMGD_Tester
             var line2_Status = browser.FindElementById("useStatus_2").Text;
             ATAInfo = $"Phone lines in ATA:\nLine 1 is {line1} and is {line1_hook} hook and currently {line1_Status}\n";
             ATAInfo += $"Phone line 2 is {line2} and is {line2_hook} hook and currently {line2_Status}\n";
-
-
+            //Find DHCP table
+            var LAN_HostBtn = browser.FindElementsById("menuSubList");
+            LAN_HostBtn[1].Click();
+            //Gather DHCP table info.. 
+            var DHCP_Table = browser.FindElementById("PageList");
+            DHCP_Table = DHCP_Table.FindElement(By.TagName("table"));
+            var DHCP_Rows = DHCP_Table.FindElements(By.TagName("tr"));
+            int DHCP_Count = DHCP_Rows.Count;
+            string DHCP_Info = $"{DHCP_Count.ToString()} Devices were found in DHCP Table:\n";
+            foreach(var Row in DHCP_Rows)
+            {
+                int counter = 1;
+                var info = Row.FindElements(By.TagName("td"));
+                /*Should be 7 items per Entry in DHCP table
+                 * 0 - MAC address
+                 * 1 - LAN IP
+                 * 2 - Interface Type
+                 * 3 - Address Source
+                 * 4 - Expires in
+                 * 5 - Device Name
+                 * 6 - DHCP Status
+                 */
+                DHCP_Info += $"#{counter.ToString()}MAC: {info[0].ToString()} IP: {info[1].ToString()} Host Name: {info[5].ToString()} DHCP Status: {info[6].ToString()}\n";
+                counter++;
+            }
+            //Should be all done with ATA, go ahead and reboot dat hoe!
+            browser.FindElementById("loginReboot").Click();
+            //Combine information
+            ATAInfo += DHCP_Info;
+            ATAInfo += "Rebooted ATA";
             return ATAInfo;
         }
         public string Spa122(ChromeDriver browser)
