@@ -12,8 +12,11 @@ namespace LMGD_Tester
 {
     class ATA
     {
+        //Const for logging in. 
         private const string userName = "admin";
         private const string passWord = ".amaph0n3";
+
+
         public string Cambium(ChromeDriver browser)
         {
             //Browser should be looking at ATA page by now
@@ -48,6 +51,8 @@ namespace LMGD_Tester
             var DHCP_Rows = DHCP_Table.FindElements(By.TagName("tr"));
             int DHCP_Count = DHCP_Rows.Count;
             string DHCP_Info = $"{DHCP_Count.ToString()} Devices were found in DHCP Table:\n";
+            
+            //Iterate over each row, grab all DHCP items listed there 
             foreach(var Row in DHCP_Rows)
             {
                 int counter = 1;
@@ -61,14 +66,16 @@ namespace LMGD_Tester
                  * 5 - Device Name
                  * 6 - DHCP Status
                  */
-                DHCP_Info += $"#{counter.ToString()}MAC: {info[0].ToString()} IP: {info[1].ToString()} Host Name: {info[5].ToString()} DHCP Status: {info[6].ToString()}\n";
+                DHCP_Info += $"#{counter.ToString()} MAC: {info[0].ToString()} IP: {info[1].ToString()} Host Name: {info[5].ToString()} DHCP Status: {info[6].ToString()}\n";
                 counter++;
             }
+
             //Should be all done with ATA, go ahead and reboot dat hoe!
             browser.FindElementById("loginReboot").Click();
+            
             //Combine information
             ATAInfo += DHCP_Info;
-            ATAInfo += "Rebooted ATA";
+            ATAInfo += "Rebooted / Rebuilt ATA";
             return ATAInfo;
         }
         public string Spa122(ChromeDriver browser)
@@ -76,9 +83,10 @@ namespace LMGD_Tester
             string ATAInfo = "";
             return ATAInfo;
         }
+
         public string Spa2102(ChromeDriver browser)
         {
-            string ATAInfo = "";
+            string ATAInfo = "Found SPA2102, just create a ticket a this point, this thing is an\nancient piece of junk that needs to be replaced. ";
             return ATAInfo;
         }
 

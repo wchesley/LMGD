@@ -13,10 +13,10 @@ namespace LMGD_Tester
     class FOPS
     {
         //URL Building Strings: 
-        public const string FOPS_HomeUrl = "https://fops.amatechtel.com";
-        public const string FOPS_LoginUrl = "/login.asp";
-        public const string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
-        public const string FOPS_RadioUrl = "/tools/su_config/default.asp";
+        public string FOPS_HomeUrl = "https://fops.amatechtel.com";
+        public string FOPS_LoginUrl = "/login.asp";
+        public string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
+        public string FOPS_RadioUrl = "/tools/su_config/default.asp";
         
 
 
@@ -27,10 +27,9 @@ namespace LMGD_Tester
         /// <param name="UserID"></param>
         /// <param name="password"></param>
         /// <param name="browser"></param>
-        public ChromeDriver FOPS_Login(ChromeDriver browser, string PrevURL)
+        public ChromeDriver FOPS_Login(string UserID, string password, ChromeDriver browser, string PrevURL)
         {
-            string UserID = "wchesley";
-            string password = "fuimdrunk1";
+            
             browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_LoginUrl);
             var userID = browser.FindElementById("username");
             var pswd = browser.FindElementById("password");
@@ -132,13 +131,13 @@ namespace LMGD_Tester
         /// Attmepts login if not already there. Redirects back to Radio page if not logged in.
         /// </summary>
         /// <param name="browser"></param>
-        /// <returns></returns>
+        /// <returns type='string'></returns>
         public string GetRadioIP(ChromeDriver browser, string customerNumber)
         {
             var GetRadio = new Radio();
             string Radio_Info = "";
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
-            if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
+            if(browser.Url.ToString().Contains(FOPS_Login)==true)
             {
                 FOPS_Login(browser,FOPS_HomeUrl+FOPS_RadioUrl);
             }
@@ -189,7 +188,7 @@ namespace LMGD_Tester
             else
             {
                 //If going for VL, here would be the place to attempt telnet, but 450 & ePMP will accept telnet connection too. 
-                Radio_Info = "Radio was not found or is not a 450, ePMP or 320(Wimax). Try again or search manually";
+                Radio_Info = "Radio was not found or is not a 450, ePMP or Wimax. Try again or search manually";
             }
             return Radio_Info;
         }
@@ -206,7 +205,7 @@ namespace LMGD_Tester
             }
             return true;
         }
-        public bool IsLoggedInFOPS (ChromeDriver broswer, string prevURL)
+        public bool IsLoggedInToFOPS (ChromeDriver broswer, string prevURL)
         {
             bool loggedIn = false; 
             if(broswer.Url.ToString().Contains(FOPS_LoginUrl)==true)

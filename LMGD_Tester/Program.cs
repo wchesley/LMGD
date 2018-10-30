@@ -27,31 +27,25 @@ namespace LMGD_Tester
             string AccountNumber = "";
             string ATAError = "ATA Error occured... ";
             FOPS FOPSPage = new FOPS();
-            // attempt to load sensitive info from local xml file. 
 
+            // attempt to load sensitive info from local xml file. 
             XElement LMGD_Doc = XElement.Load(@"C:\Users\Walker\Documents\LMGD_Data.xml");
             username = LMGD_Doc.Element("username").Value;
             password = LMGD_Doc.Element("password").Value;
 
-
-            //Console.WriteLine("pulled from xml: " + username);
-            //Console.WriteLine("pulled from xml: " + password);
-            //Console.ReadKey(); 
-
             //init chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
-            //manually loggin in for testing sake. 
+            //log into FOPS
             FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
-            //browser.Navigate().GoToUrl(FOPS);
-            //I'm getting redirected to login page? session issues?
-            //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
-
-            //Console.WriteLine(browser.Url);
+            //Get customer account number from end user...
             Console.WriteLine("Enter Account number: ");
             AccountNumber = Console.ReadLine();
-            var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
+            //Still need to ping equip first. 
+            //get ATA Info first
             var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
-            browser.Quit();
+            var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
+            
+            browser.Quit(); 
             Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}");
         }
     
