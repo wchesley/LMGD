@@ -11,6 +11,33 @@ namespace LMGD_Tester
 {
     class Radio
     {
+        /// <summary>
+        /// Check webpage for specific elements related to each radio then transfers control to 
+        /// the proper method. If nothing is found
+        /// </summary>
+        /// <param name="browser"></param>
+        public void GetRadioType(ChromeDriver browser)
+        {
+            
+            BrowserExt TestRadio = new BrowserExt();
+            if(TestRadio.isElemenentPresent(By.Id("CanopyUsername"), browser) == true)
+            {
+                ScrapeFourFifty(browser);
+            }
+            if(TestRadio.isElemenentPresent(By.Id("loginBtn"), browser) == true)
+            {
+                Scrape_ePMP(browser);
+            }
+            if(TestRadio.isElemenentPresent(By.Id("login_form"), browser) == true)
+            {
+                ScrapeWimax(browser);
+            }
+            else
+            {
+                Console.WriteLine("Couldn't determine radio type...exiting app");
+                browser.Quit();
+            }
+        }
         //450 Radio scraping logic
         public string ScrapeFourFifty(ChromeDriver browser)
         {
@@ -64,9 +91,8 @@ namespace LMGD_Tester
 
 	 // ePMP Radio Scraping Logic: 
 	    
-        public string Scrape_ePMP(ChromeDriver browser, string RadioIP)
+        public string Scrape_ePMP(ChromeDriver browser)
         {
-            browser.Navigate().GoToUrl(RadioIP);
             var userId = browser.FindElementByName("username");
             var pwd = browser.FindElementByName("password");
             var login = browser.FindElementById("loginBtn");

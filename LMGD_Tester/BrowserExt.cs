@@ -44,5 +44,21 @@ namespace LMGD_Tester
             catch (Exception e) { }
             return isPresent;
         }
+        //Logic if Element is present. 
+        public bool isElemenentPresent(By by, ChromeDriver browser)
+        {
+            bool isPresent = false;
+            try
+            {
+                browser.FindElement(by);
+                isPresent = true;
+            }
+            catch (NoSuchElementException)
+            {
+                isPresent = false;
+            }
+
+            return isPresent; 
+        }
     }
 }
