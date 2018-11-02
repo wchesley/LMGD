@@ -15,6 +15,7 @@ namespace LMGD_Tester
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             //declare variables. 
@@ -36,7 +37,7 @@ namespace LMGD_Tester
             //init chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
             //log into FOPS
-            FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
+            FOPSPage.FOPS_Login(username, password, browser, FOPS + AtaProvisioning);
             //Get customer account number from end user...
             Console.WriteLine("Enter Account number: ");
             AccountNumber = Console.ReadLine();
