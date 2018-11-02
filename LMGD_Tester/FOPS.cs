@@ -13,10 +13,10 @@ namespace LMGD_Tester
     class FOPS
     {
         //URL Building Strings: 
-        public string FOPS_HomeUrl = "https://fops.amatechtel.com";
-        public string FOPS_LoginUrl = "/login.asp";
-        public string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
-        public string FOPS_RadioUrl = "/tools/su_config/default.asp";
+        private const string FOPS_HomeUrl = "https://fops.amatechtel.com";
+        private const string FOPS_LoginUrl = "/login.asp";
+        private const string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
+        private const string FOPS_RadioUrl = "/tools/su_config/default.asp";
         
 
 
@@ -64,7 +64,7 @@ namespace LMGD_Tester
             browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning");
             if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
-                FOPS_Login(browser,FOPS_HomeUrl+FOPS_ATAUrl);
+                FOPS_Login("wchesley","fuimdrunk1",browser,FOPS_HomeUrl+FOPS_ATAUrl);
             }
             browser.FindElementById("search_foreign_id").SendKeys(AccountNumber);
             browser.FindElementById("voip_search_submit_button").Click();
@@ -137,9 +137,9 @@ namespace LMGD_Tester
             var GetRadio = new Radio();
             string Radio_Info = "";
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
-            if(browser.Url.ToString().Contains(FOPS_Login)==true)
+            if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
-                FOPS_Login(browser,FOPS_HomeUrl+FOPS_RadioUrl);
+                FOPS_Login("wchesley","fuimdrunk1",browser,FOPS_HomeUrl+FOPS_RadioUrl);
             }
             var custNumber = browser.FindElementByName("customer_number");
             var RadioForm = browser.FindElementsByName("B1");
@@ -179,7 +179,7 @@ namespace LMGD_Tester
             }
             else if (RadioType(Radio_ePMP, browser) == true)
             {
-                Radio_Info = GetRadio.Scrape_ePMP(browser, browser.Url.ToString());
+                Radio_Info = GetRadio.Scrape_ePMP(browser);
             }
             else if (RadioType(RadioWimax, browser) == true)
             {
@@ -210,7 +210,7 @@ namespace LMGD_Tester
             bool loggedIn = false; 
             if(broswer.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
-                FOPS_Login(broswer,prevURL);
+                FOPS_Login("wchesley","fuimdrunk1",broswer,prevURL);
                 loggedIn = true; 
             }
             return loggedIn; 
