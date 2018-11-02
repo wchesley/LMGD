@@ -17,7 +17,7 @@ namespace LMGD_Tester
         private const string FOPS_LoginUrl = "/login.asp";
         private const string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
         private const string FOPS_RadioUrl = "/tools/su_config/default.asp";
-        
+        public Pinger PingTest = new Pinger(); 
 
 
         /// <summary>
@@ -37,7 +37,6 @@ namespace LMGD_Tester
             userID.SendKeys(UserID);
             pswd.SendKeys(password);
             login.Submit();
-            Thread.Sleep(100);
             browser.Navigate().GoToUrl(PrevURL);
             return browser;
         }
@@ -53,7 +52,7 @@ namespace LMGD_Tester
         /// <param name="AccountNumber"></param>
         
         public string GetAtaIp(ChromeDriver browser, string AccountNumber)
-        {
+        { 
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
             //logic to search url and verify not on login page. 
             //Console.WriteLine(browser.Url);
@@ -82,7 +81,7 @@ namespace LMGD_Tester
             Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
             Console.WriteLine($"Browser Location, after 'searching' ata... {whereAmI}");
 
-            //Finding ATA's last known IP and Resetting it's config. 
+            //Finding ATA's last known IP and rebuild it's config. 
             var AtaIP = browser.FindElementsByClassName("small_pad");
             //Should save changes...
             Console.WriteLine($"Saved changes clicked...{AtaIP[1].Text}");
@@ -102,17 +101,17 @@ namespace LMGD_Tester
                 case "Cambium R201P":
                     Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
                     //Call Cambium logic return to ATA_Info;
-                    ATA_Info = GetATA.Cambium(browser);
+                    ATA_Info += PingTest.PingBuilder(browser, "ATA Cambium");
                     break;
                 case "Linksys SPA122":
                     Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
                     //Call Cisco SPA122 logic
-                    ATA_Info = GetATA.Spa122(browser);
+                    ATA_Info += PingTest.PingBuilder(browser, "ATA SPA122");
                     break;
                 case "Linksys SPA2102":
                     Console.WriteLine("Found SPA2102, Attempting Login/Reboot but you might be fucked anyway lol it's a POS...");
                     //Call SPA 2102 logic
-                    ATA_Info = GetATA.Spa2102(browser);
+                    ATA_Info += PingTest.PingBuilder(browser, "ATA SPA2102");
                     break;
                 default:
                     Console.WriteLine(ATAError);
@@ -161,62 +160,10 @@ namespace LMGD_Tester
 
             browser.Navigate().GoToUrl(RadioTable.Text.ToString());
             Console.WriteLine(browser.Url);
-
-            // logic to determine Radio type / transfer browser along proper channel here: 
-            //ePMP test radio: 172.20.70.174
-            //450 test radio: 172.16.98.161
-            //WiMax test radio: 172.22.94.16
-            //VL ? debating...HA, no...no way
-
-            string RadioFourFiftey = "quickform";
-            string RadioWimax = "img_bg";
-            string Radio_ePMP = "top-level-menu";
-            //need to rework logic to use IsAttributePresent Method from BrowserExt class. 
-            if (RadioType(RadioFourFiftey, browser) == true)
-            {
-               Radio_Info = GetRadio.ScrapeFourFifty(browser);
-                
-            }
-            else if (RadioType(Radio_ePMP, browser) == true)
-            {
-                Radio_Info = GetRadio.Scrape_ePMP(browser);
-            }
-            else if (RadioType(RadioWimax, browser) == true)
-            {
-                Radio_Info = GetRadio.ScrapeWimax(browser);
-            }
-            else
-            {
-                //If going for VL, here would be the place to attempt telnet, but 450 & ePMP will accept telnet connection too. 
-                Radio_Info = "Radio was not found or is not a 450, ePMP or Wimax. Try again or search manually";
-            }
+            Radio_Info += PingTest.PingBuilder(browser, "radio");
+            
+            
             return Radio_Info;
         }
-        public static bool RadioType(string id, ChromeDriver browser)
-        {
-            try
-            {
-                browser.FindElementById(id);
-            }
-            catch (NoSuchElementException e)
-            {
-                Console.WriteLine($"Radio was not found or is not a 450, ePMP or 320 \nError code: {e.ToString()}");
-                return false;
-            }
-            return true;
-        }
-        public bool IsLoggedInToFOPS (ChromeDriver broswer, string prevURL)
-        {
-            bool loggedIn = false; 
-            if(broswer.Url.ToString().Contains(FOPS_LoginUrl)==true)
-            {
-                FOPS_Login("wchesley","fuimdrunk1",broswer,prevURL);
-                loggedIn = true; 
-            }
-            return loggedIn; 
-        }
-        
-
-
     }
 }

@@ -16,7 +16,7 @@ namespace LMGD_Tester
         /// <param name="IP"></param>
         /// <param name="equipType"></param>
         /// <returns></returns>
-        public string PingBuilder(ChromeDriver browser, string IP, string equipType)
+        public string PingBuilder(ChromeDriver browser, string equipType)
         {
             ATA GetATA = new ATA();
             Radio GetRadio = new Radio();
@@ -34,7 +34,7 @@ namespace LMGD_Tester
             //this would need to be closed with each new run 
             for(int i=0; i<=10; i++)
             {
-                PingReply reply = Pinger.Send(IP,timeout,buffer,opt);
+                PingReply reply = Pinger.Send(browser.Url,timeout,buffer,opt);
                 if(reply.Status == IPStatus.Success)
                 {
                     Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
@@ -44,8 +44,8 @@ namespace LMGD_Tester
                 //if ping fails then RoundtripTime will be 0
                 else if (reply.RoundtripTime == 0)
                 {
-                    Console.WriteLine($"Failed to receive reply from {IP}");
-                    PingReplies += $"Failed to receive reply from {IP}"; 
+                    Console.WriteLine($"Failed to receive reply from {browser.Url}");
+                    PingReplies += $"Failed to receive reply from {browser.Url}"; 
                     failedPacket++;
                 }
                 

@@ -19,19 +19,22 @@ namespace LMGD_Tester
 
         public string Cambium(ChromeDriver browser)
         {
+            BrowserExt ElementCheck = new BrowserExt();
             //Browser should be looking at ATA page by now
             string ATAInfo = "";
             browser.FindElementById("user_name").SendKeys(userName);
             browser.FindElementById("password").SendKeys(passWord);
-            var loginBtn = browser.FindElementById("login");
-            if(loginBtn.Displayed == true)
+           
+            if(ElementCheck.isElemenentPresent(By.Id("login"),browser) == true)
             {
-                loginBtn.Click();
+                browser.FindElementById("login").Click();
+                //loginBtn.Click();
             }
             else
             {
                 //If login button is not present we'll create it ourselves same way DOM originally does it. 
                 ((IJavaScriptExecutor)browser).ExecuteScript("document.write('<input id='login' type='submit' onclick='OnSubmit(this.form);');");
+                browser.FindElementById("login").Click();
             }
             //Get phone lines and their status, format and add to ATAInfo string. 
             var line1 = browser.FindElementById("sipStatus_1").Text;
