@@ -56,6 +56,7 @@ namespace LMGD_Tester
             //assumes we're logged into FOPS... SHould be if control was transferred from FOPS browser sesh directly...THis should be handled in FOPS browser. 
             //logic to search url and verify not on login page. 
             //Console.WriteLine(browser.Url);
+            
             string ATAError = "ATA not found in FOPS...try again or use different account number (External ID maybe?)";
             string ATA_Info = "";
             var GetATA = new ATA(); 
@@ -70,16 +71,22 @@ namespace LMGD_Tester
 
             //TODO: Handle Multiple ATA's found. Need good way of verifiying we've selected the right customer
             //Selects First ATA found in table
-            var ATA_Table = browser.FindElementByClassName("table_row");
-            var ATA_Rows = ATA_Table.FindElements(By.TagName("td"));
+            var ATA_Table = browser.FindElementsByClassName("table_row");
+            //assume first row has our ATA
+            var ATA_Rows = ATA_Table[0].FindElements(By.TagName("td"));
+            //to get ATA Type
             Console.WriteLine($"Found ATA Type: {ATA_Rows[2].Text}");
-            ATA_Table.Click();
-            
+            var ataType = ATA_Rows[2]; 
+            //Stuck here, feel like this isn't the first time either, will need to mitigate this. 
+            ATA_Rows[0].Click();
+            var ataSuspended = ATA_Rows[9]; //checks if ata is suspended. should be yes or no. 
+
+
             //ATA config page opens in new tab. cannot call URL dirctly. returns error
             browser.SwitchTo().Window(browser.WindowHandles[1]);
             string whereAmI = browser.Url;
             Console.WriteLine($"Number of tabs: {browser.WindowHandles.Count}");
-            Console.WriteLine($"Browser Location, after 'searching' ata... {whereAmI}");
+            Console.WriteLine($"Browser Location, after searching for ATA... {whereAmI}");
 
             //Finding ATA's last known IP and rebuild it's config. 
             var AtaIP = browser.FindElementsByClassName("small_pad");
