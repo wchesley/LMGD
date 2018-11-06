@@ -76,10 +76,13 @@ namespace LMGD_Tester
             var ATA_Rows = ATA_Table[0].FindElements(By.TagName("td"));
             //to get ATA Type
             Console.WriteLine($"Found ATA Type: {ATA_Rows[2].Text}");
-            var ataType = ATA_Rows[2]; 
-            //Stuck here, feel like this isn't the first time either, will need to mitigate this. 
-            ATA_Rows[0].Click();
+            
+            string ataType = ATA_Rows[2].Text;
             var ataSuspended = ATA_Rows[9]; //checks if ata is suspended. should be yes or no. 
+            //wowee have to call explicit wait to get this crap site to 'accept' my click, lol headless browser be too quick son!
+            Thread.Sleep(100);
+            //Stuck here, feel like this isn't the first time either, will need to mitigate this. 
+            ATA_Table[0].Click();
 
 
             //ATA config page opens in new tab. cannot call URL dirctly. returns error
@@ -100,9 +103,9 @@ namespace LMGD_Tester
             browser.SwitchTo().Window(browser.WindowHandles[2]);
             Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
             whereAmI = browser.Url;
-            switch (ATA_Rows[2].Text)
+            switch (ataType)
             {
-                //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is selected in DOM. 
+                //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is specified in DOM. 
 
                 case "Cambium 200P":
                 case "Cambium R201P":
