@@ -33,28 +33,29 @@ namespace LMGD_Tester
             //Considering option to just launch CLI and endlessly ping desired/found IP's, 
             //this would need to be closed with each new run 
 
-            try
-            {
-                PingReply reply = Pinger.Send(browser.Url, timeout, buffer, opt);
-                if (reply.Status == IPStatus.Success)
-                {
-                    Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
-                    PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
-                    // successPacket++;
-                }
-                //if ping fails then RoundtripTime will be 0
-                else if (reply.RoundtripTime == 0)
-                {
-                    Console.WriteLine($"Failed to receive reply from {browser.Url}");
-                    return PingReplies += $"Failed to receive reply from {browser.Url}";
-                    //failedPacket++;
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            //ERROR Thrown: Unknown host, think it has something to do with http://ipaddress/ instead of a normal .com address or blank IP, psure windows cmd throws same error
+            //try
+            //{
+            //    PingReply reply = Pinger.Send(browser.Url, timeout, buffer, opt);
+            //    if (reply.Status == IPStatus.Success)
+            //    {
+            //        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
+            //        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
+            //        // successPacket++;
+            //    }
+            //    //if ping fails then RoundtripTime will be 0
+            //    else if (reply.RoundtripTime == 0)
+            //    {
+            //        Console.WriteLine($"Failed to receive reply from {browser.Url}");
+            //        return PingReplies += $"Failed to receive reply from {browser.Url}";
+            //        //failedPacket++;
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine($"Ping Error: {e.ToString()}");
+            //    throw;
+            //}
             
                 
                 

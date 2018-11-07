@@ -37,6 +37,8 @@ namespace LMGD_Tester
                 browser.FindElementById("login").Click();
             }
             //Get phone lines and their status, format and add to ATAInfo string. 
+            Console.WriteLine($"Cambium DOM: {browser.PageSource}");
+            Console.ReadKey();
             var line1 = browser.FindElementById("sipStatus_1").Text;
             var line1_hook = browser.FindElementById("hookStatus_1").Text;
             var line1_Status = browser.FindElementById("useStatus_1").Text;
@@ -46,8 +48,8 @@ namespace LMGD_Tester
             ATAInfo = $"Phone lines in ATA:\nLine 1 is {line1} and is {line1_hook} hook and currently {line1_Status}\n";
             ATAInfo += $"Phone line 2 is {line2} and is {line2_hook} hook and currently {line2_Status}\n";
             //Find DHCP table
-            var LAN_HostBtn = browser.FindElementsById("menuSubList");
-            LAN_HostBtn[1].Click();
+            var LAN_HostBtn = browser.FindElementById("menuSubList");
+            LAN_HostBtn.FindElements(By.TagName("li"))[1].Click(); 
             //Gather DHCP table info.. 
             var DHCP_Table = browser.FindElementById("PageList");
             DHCP_Table = DHCP_Table.FindElement(By.TagName("table"));
@@ -79,6 +81,18 @@ namespace LMGD_Tester
             //Combine information
             ATAInfo += DHCP_Info;
             ATAInfo += "Rebooted / Rebuilt ATA";
+            string JSAlertError = null; 
+            try
+            {
+                var handleAlert = browser.SwitchTo().Alert();
+
+                handleAlert.Accept();
+            }
+            catch (Exception e)
+            {
+                JSAlertError = e.ToString();
+                Console.WriteLine(e.StackTrace);
+            }
             return ATAInfo;
         }
         public string Spa122(ChromeDriver browser)

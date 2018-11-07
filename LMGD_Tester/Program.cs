@@ -44,6 +44,7 @@ namespace LMGD_Tester
             //Still need to ping equip first. 
             //get ATA Info first
             var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
+            Console.WriteLine(ReturnedATA.ToString());
             var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
             
             browser.Quit(); 

@@ -143,6 +143,7 @@ namespace LMGD_Tester
         /// <returns type='string'></returns>
         public string GetRadioIP(ChromeDriver browser, string customerNumber)
         {
+            Console.WriteLine("Searching for Radio...");
             var GetRadio = new Radio();
             string Radio_Info = "";
             browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
@@ -170,6 +171,7 @@ namespace LMGD_Tester
 
             browser.Navigate().GoToUrl(RadioTable.Text.ToString());
             Console.WriteLine(browser.Url);
+            //go to ping/crawl radio. 
             Radio_Info += PingTest.PingBuilder(browser, "radio");
             
             
