@@ -46,9 +46,10 @@ namespace LMGD_Tester
             var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
             Console.WriteLine(ReturnedATA.ToString());
             var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
-            
+            Console.WriteLine(ReturnedRadio.ToString());
             browser.Quit(); 
-            Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}");
+            Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}\nEND>>>");
+            Console.ReadKey();
         }
     
     }

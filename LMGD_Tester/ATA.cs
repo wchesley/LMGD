@@ -37,8 +37,7 @@ namespace LMGD_Tester
                 browser.FindElementById("login").Click();
             }
             //Get phone lines and their status, format and add to ATAInfo string. 
-            Console.WriteLine($"Cambium DOM: {browser.PageSource}");
-            Console.ReadKey();
+            
             var line1 = browser.FindElementById("sipStatus_1").Text;
             var line1_hook = browser.FindElementById("hookStatus_1").Text;
             var line1_Status = browser.FindElementById("useStatus_1").Text;
@@ -71,7 +70,7 @@ namespace LMGD_Tester
                  * 5 - Device Name
                  * 6 - DHCP Status
                  */
-                DHCP_Info += $"#{counter.ToString()} MAC: {info[0].ToString()} IP: {info[1].ToString()} Host Name: {info[5].ToString()} DHCP Status: {info[6].ToString()}\n";
+                DHCP_Info += $"#{counter.ToString()} MAC: {info[0].Text} IP: {info[1].Text} Host Name: {info[5].Text} DHCP Status: {info[6].Text}\n";
                 counter++;
             }
 

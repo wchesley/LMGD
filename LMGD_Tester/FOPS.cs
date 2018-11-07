@@ -164,12 +164,12 @@ namespace LMGD_Tester
             //again need to test via ping if radio is up or not. 
             //need to determine radio type via webpage DOM 
             var RadioTable = browser.FindElementByTagName("td");
-            Console.WriteLine(RadioTable.Text);
-
+            Console.WriteLine($"Found Radio IP: {RadioTable.Text}");
+            //Uri RadioIP = RadioTable.Text; 
             //logic to ping radio goes here. 
 
 
-            browser.Navigate().GoToUrl(RadioTable.Text.ToString());
+            browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
             Console.WriteLine(browser.Url);
             //go to ping/crawl radio. 
             Radio_Info += PingTest.PingBuilder(browser, "radio");

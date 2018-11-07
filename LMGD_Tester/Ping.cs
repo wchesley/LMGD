@@ -64,7 +64,7 @@ namespace LMGD_Tester
                 if(equipType == "radio")
                 {
                     //Call method to Determine Radio type, xfers control to Radio class.
-                    GetRadio.GetRadioType(browser);
+                    PingReplies += GetRadio.GetRadioType(browser);
                 }
                 //Calls ATA method based on equipType input. xfers control to ATA class. all scraped info will be added to ping replies and return to Main();
                 else if(equipType.Contains("ATA"))

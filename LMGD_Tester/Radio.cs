@@ -16,26 +16,31 @@ namespace LMGD_Tester
         /// the proper method. If nothing is found
         /// </summary>
         /// <param name="browser"></param>
-        public void GetRadioType(ChromeDriver browser)
+        public string GetRadioType(ChromeDriver browser)
         {
-            
+            string radio = "Nothing found..."; 
             BrowserExt TestRadio = new BrowserExt();
             if(TestRadio.isElemenentPresent(By.Id("CanopyUsername"), browser) == true)
             {
-                ScrapeFourFifty(browser);
+                Console.WriteLine("Found 450 Radio...attempting login/reboot");
+                return radio = ScrapeFourFifty(browser);
+
             }
-            if(TestRadio.isElemenentPresent(By.Id("loginBtn"), browser) == true)
+            else if(TestRadio.isElemenentPresent(By.Id("loginBtn"), browser) == true)
             {
-                Scrape_ePMP(browser);
+                Console.WriteLine("Found ePMP radio...attempting login/reboot");
+                return radio = Scrape_ePMP(browser);
             }
-            if(TestRadio.isElemenentPresent(By.Id("login_form"), browser) == true)
+            else if(TestRadio.isElemenentPresent(By.Id("login_form"), browser) == true)
             {
-                ScrapeWimax(browser);
+                Console.WriteLine("Found Wimax radio...attempting login/reboot");
+               return radio = ScrapeWimax(browser);
             }
             else
             {
                 Console.WriteLine("Couldn't determine radio type...exiting app");
                 browser.Quit();
+                return radio;
             }
         }
         //450 Radio scraping logic
@@ -67,7 +72,7 @@ namespace LMGD_Tester
             userId.SendKeys("admin");
             Radiopassword.SendKeys("amatech1");
             login.Submit();
-
+            Console.WriteLine("Logged into 450");
             //Gather Stats
             var FourFifty_Uptime = browser.FindElementById("UpTime").Text;
             var FourFifty_EthernetStats = browser.FindElementById("LinkStatusMain").Text;
