@@ -60,5 +60,20 @@ namespace LMGD_Tester
 
             return isPresent; 
         }
+        public void HandleAlerts(ChromeDriver browser)
+        {
+            string JSAlertError = null;
+            try
+            {
+                var handleAlert = browser.SwitchTo().Alert();
+
+                handleAlert.Accept();
+            }
+            catch (Exception e)
+            {
+                JSAlertError = e.ToString();
+                Console.WriteLine(e.StackTrace);
+            }
+        }
     }
 }

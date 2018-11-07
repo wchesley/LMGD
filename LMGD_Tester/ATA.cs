@@ -15,7 +15,7 @@ namespace LMGD_Tester
         //Const for logging in. 
         private const string userName = "admin";
         private const string passWord = ".amaph0n3";
-
+        public BrowserExt BrowserHelper = new BrowserExt();
 
         public string Cambium(ChromeDriver browser)
         {
@@ -101,7 +101,7 @@ namespace LMGD_Tester
             browser.FindElementByName("pwd").SendKeys(passWord);
             //login button? no unique ID for it so trying this way, hopefully I can count 
             browser.FindElements(By.TagName("input"))[5].Click();
-
+            
             //Go to network setup page. 
             browser.FindElementById("trt_Network_Service.asp").Click();
             var networkSettings = browser.FindElementById("d_4");
@@ -109,22 +109,30 @@ namespace LMGD_Tester
             //Show DHCP reservations. 
             browser.FindElementById("t3").Click();
             //id's could be numbered like an array? need to find an spa122 with mulitples to test that, too bad they're becoming rare...or is it that bad? lolol
-            var DHCP_Name = browser.FindElementsById("dhcp_select_name_0");
-            var DHCP_IP = browser.FindElementsById("dhcp_select_ip_0");
-            var DHCP_MAC = browser.FindElementsById("dhcp_select_mac_0");
-            ATAInfo += $"Number of items found in DHCP: {DHCP_IP.Count.ToString()}";
-            for (int dhcp_list = 0; dhcp_list <= DHCP_IP.Count; dhcp_list++)
-            {
-                ATAInfo += $"DHCP client name: {DHCP_Name[dhcp_list].Text} IP: {DHCP_IP[dhcp_list].Text} MAC: {DHCP_MAC[dhcp_list].Text}";
-                Console.WriteLine($"DHCP client name: {DHCP_Name[dhcp_list].Text} IP: {DHCP_IP[dhcp_list].Text} MAC: {DHCP_MAC[dhcp_list].Text}");
-            }
+            var DHCP_Name = browser.FindElementByName("dhcp_select_name_0");
+            var DHCP_IP = browser.FindElementByName("dhcp_select_ip_0");
+            var DHCP_MAC = browser.FindElementByName("dhcp_select_mac_0");
+            ATAInfo += $"DCHP item: \nName:{DHCP_Name.Text}\nLAN IP: {DHCP_IP.Text}\nMAC: {DHCP_MAC.Text}";
+            //Considering there's only one ethernet port on the SPA122, will assume there's one item in DHCP, not always 100%
+            //accurate as not every customer lets SPA122 run DHCP, but should be enough to go off of as far as equipment functionality
+            //ATAInfo += $"Number of items found in DHCP: {DHCP_IP.Count.ToString()}";
+            //Console.WriteLine($"Number of items found in DHCP: {DHCP_IP.Count.ToString()}");
+            //for (int dhcp_list = 0; dhcp_list >= DHCP_IP.Count; dhcp_list++)
+            //{
+            //    ATAInfo += $"DHCP client name: {DHCP_Name[dhcp_list].Text} IP: {DHCP_IP[dhcp_list].Text} MAC: {DHCP_MAC[dhcp_list].Text}";
+            //    Console.WriteLine($"DHCP client name: {DHCP_Name[dhcp_list].Text} IP: {DHCP_IP[dhcp_list].Text} MAC: {DHCP_MAC[dhcp_list].Text}");
+            //}
 
             //Check phones
             browser.FindElementById("trt_voice.asp").Click();
             //this page is a mess, hope we really REALLY can count...you really don't wanna see this DOM man. but if you do uncomment this next line, ye be warned
             //Console.WriteLine(browser.PageSource.ToString());
 
+            //Data I want is stored in iframe will have to switch in and out of it. 
+            browser.SwitchTo().Frame(browser.FindElementById("iframe"));
+
             //Should be leading DIV containing ALL the info related to voice/uptime. 
+
             var infoDiv = browser.FindElementById("Information");
             var infoTable = infoDiv.FindElements(By.TagName("tr"))[8];
             infoTable = infoTable.FindElements(By.TagName("td"))[3];
@@ -137,24 +145,15 @@ namespace LMGD_Tester
             infoTable = infoTable.FindElements(By.TagName("tr"))[42]; //yeah that many rows in this table
             ATAInfo += $"Line 2 is {infoTable.FindElements(By.TagName("font"))[0].Text} hook and {infoTable.FindElements(By.TagName("font"))[1].Text} to SIP Server";
             Console.WriteLine("Going to reboot ATA...");
+            //Getting out of iframe, back into orginal DOM
+            browser.SwitchTo().Frame(browser.FindElementById("content"));
             browser.FindElementById("trt_Management.asp").Click();
             var adminPage = browser.FindElementById("d_20");
             //should be reboot button. 
             adminPage.FindElement(By.TagName("a")).Click();
             browser.FindElementById("t4").Click();
             //handle JS alert 
-            string JSAlertError = null;
-            try
-            {
-                var handleAlert = browser.SwitchTo().Alert();
-
-                handleAlert.Accept();
-            }
-            catch (Exception e)
-            {
-                JSAlertError = e.ToString();
-                Console.WriteLine(e.StackTrace);
-            }
+            BrowserHelper.HandleAlerts(browser);
             return ATAInfo;
         }
 

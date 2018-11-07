@@ -17,8 +17,8 @@ namespace LMGD_Tester
         private const string FOPS_LoginUrl = "/login.asp";
         private const string FOPS_ATAUrl = "/tools/ataprovisioning/default.asp";
         private const string FOPS_RadioUrl = "/tools/su_config/default.asp";
-        public Pinger PingTest = new Pinger(); 
-
+        public Pinger PingTest = new Pinger();
+        
 
         /// <summary>
         /// Redirects browser to FOPS login page, and logs in under specified user. Waits 100ms for redirect following login.

@@ -11,6 +11,7 @@ namespace LMGD_Tester
 {
     class Radio
     {
+        public BrowserExt BrowserHelper = new BrowserExt();
         /// <summary>
         /// Check webpage for specific elements related to each radio then transfers control to 
         /// the proper method. If nothing is found
@@ -132,20 +133,10 @@ namespace LMGD_Tester
             browser.FindElementById("reboot_device").Click();
             
 
-            string JSAlertError = null;
+            
             string RadioStats = null;
             //Handle pop up asking us if we're sure we want to reboot, yes we are. 
-            try
-            {
-                var handleAlert = browser.SwitchTo().Alert();
-
-                handleAlert.Accept();
-            }
-            catch (Exception e)
-            {
-                JSAlertError = e.ToString();
-                Console.WriteLine(e.StackTrace);
-            }
+            BrowserHelper.HandleAlerts(browser);
 
             //Title's in ePMP radio are "preformated", will concantenate strings together and display. 
             RadioStats = $"{ePMPUptime.ToString()}\n";
