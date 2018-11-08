@@ -35,9 +35,9 @@ namespace LMGD_Tester
             password = LMGD_Doc.Element("password").Value;
 
             //init headless chrome browser
-            //var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
+            var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
             //init GUI chrome browser, mostly just for testings sake. 
-            var browser = new BrowserExt().CreateBrowser(FOPS);
+            //var browser = new BrowserExt().CreateBrowser(FOPS);
             //log into FOPS
             FOPSPage.FOPS_Login(username, password, browser, FOPS + AtaProvisioning);
             //Get customer account number from end user...
