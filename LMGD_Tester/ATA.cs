@@ -138,15 +138,15 @@ namespace LMGD_Tester
             infoTable = infoTable.FindElements(By.TagName("td"))[3];
             ATAInfo += $"ATA up time: {infoTable.FindElement(By.TagName("font")).Text}";
             //Line 1: 
-            infoTable = infoTable.FindElements(By.TagName("tr"))[16];
-            ATAInfo += $"Line 1 is {infoTable.FindElements(By.TagName("font"))[0].Text} hook and {infoTable.FindElements(By.TagName("font"))[1]} to SIP Server";
+            infoTable = infoDiv.FindElements(By.TagName("tr"))[16];
+            ATAInfo += $"Line 1 is {infoTable.FindElements(By.TagName("font"))[0].Text} hook and {infoTable.FindElements(By.TagName("font"))[1].Text} to SIP Server";
 
             //line 2
-            infoTable = infoTable.FindElements(By.TagName("tr"))[42]; //yeah that many rows in this table
+            infoTable = infoDiv.FindElements(By.TagName("tr"))[43]; //yeah that many rows in this table
             ATAInfo += $"Line 2 is {infoTable.FindElements(By.TagName("font"))[0].Text} hook and {infoTable.FindElements(By.TagName("font"))[1].Text} to SIP Server";
             Console.WriteLine("Going to reboot ATA...");
             //Getting out of iframe, back into orginal DOM
-            browser.SwitchTo().Frame(browser.FindElementById("content"));
+            browser.SwitchTo().DefaultContent();
             browser.FindElementById("trt_Management.asp").Click();
             var adminPage = browser.FindElementById("d_20");
             //should be reboot button. 

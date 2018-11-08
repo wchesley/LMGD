@@ -102,7 +102,7 @@ namespace LMGD_Tester
             //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
             browser.SwitchTo().Window(browser.WindowHandles[2]);
             Console.WriteLine($"If ata found/ip addr clicked number of tabs is now: {browser.WindowHandles.Count}");
-            whereAmI = browser.Url;
+            //whereAmI = browser.Url;
             switch (ataType)
             {
                 //Call proper ATA method here...switch statement? will call proper method depending on what ATA type is specified in DOM. 
