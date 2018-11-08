@@ -97,6 +97,25 @@ namespace LMGD_Tester
         public string Spa122(ChromeDriver browser)
         {
             string ATAInfo = "";
+            try
+            {
+                browser.FindElementByName("user").SendKeys(userName);
+                browser.FindElementByName("pwd").SendKeys(passWord);
+                //login button? no unique ID for it so trying this way, hopefully I can count 
+                browser.FindElements(By.TagName("input"))[5].Click();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Ran into error: {e.ToString()} \nAttempting refresh of page.");
+                //sometimes page wouldn't load for spa122, will attempt a refresh, but this could go on endlessly soooo
+                //nvm just re run old code vs callin whole method. 
+                browser.Navigate().Refresh();
+                browser.FindElementByName("user").SendKeys(userName);
+                browser.FindElementByName("pwd").SendKeys(passWord);
+                //login button? no unique ID for it so trying this way, hopefully I can count 
+                browser.FindElements(By.TagName("input"))[5].Click();
+               // throw;
+            }
             browser.FindElementByName("user").SendKeys(userName);
             browser.FindElementByName("pwd").SendKeys(passWord);
             //login button? no unique ID for it so trying this way, hopefully I can count 

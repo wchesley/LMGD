@@ -30,6 +30,11 @@ namespace LMGD_Tester
             string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             int timeout = 10000;
+
+            //new idea: run from cmd prompt as external thingy
+            //ref: https://stackoverflow.com/questions/1469764/run-command-prompt-commands
+            //string cmdText = $"/C "; wait! will need to parse out IP first in order to ping it. 
+
             //Considering option to just launch CLI and endlessly ping desired/found IP's, 
             //this would need to be closed with each new run 
 
@@ -56,12 +61,12 @@ namespace LMGD_Tester
             //    Console.WriteLine($"Ping Error: {e.ToString()}");
             //    throw;
             //}
-            
-                
-                
-            
-            
-                if(equipType == "radio")
+
+
+
+
+
+            if (equipType == "radio")
                 {
                     //Call method to Determine Radio type, xfers control to Radio class.
                     PingReplies += GetRadio.GetRadioType(browser);
