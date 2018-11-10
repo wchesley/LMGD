@@ -99,6 +99,7 @@ namespace LMGD_Tester
 	    
         public string Scrape_ePMP(ChromeDriver browser)
         {
+            string RadioStats = null;
             var userId = browser.FindElementByName("username");
             var pwd = browser.FindElementByName("password");
             var login = browser.FindElementById("loginBtn");
@@ -116,16 +117,30 @@ namespace LMGD_Tester
 
             //Have to set explicit waits for ePMP DOM to load...wireless connections be slow
             Thread.Sleep(500);
-            var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
-            var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
-            //var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
-            var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
-            var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
-            var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");
+            try
+            {
+                var ePMPRssi = browser.FindElementById("dl_rssi").GetAttribute("title");
+                var ePMPSNR = browser.FindElementById("dl_snr").GetAttribute("title");
+                //var ePMP_EthernetStatus = browser.FindElementsById("alert-success").GetAttribute("title");
+                var ePMPUptime = browser.FindElementById("sys_uptime").GetAttribute("title");
+                var ePMP_DlMod = browser.FindElementById("dl_mcs_mode").GetAttribute("title");
+                var ePMP_ULMod = browser.FindElementById("ul_mcs_mode").GetAttribute("title");
+                RadioStats = $"{ePMPUptime.ToString()}\n";
+                RadioStats += $"{ePMPRssi.ToString()}\n";
+                RadioStats += $"{ePMPSNR.ToString()}\n";
+                RadioStats += $"{ePMP_DlMod.ToString()}\n";
+                RadioStats += $"{ePMP_ULMod.ToString()}\n";
+            }
+            catch (NoSuchElementException NoElement)
+            {
+                Console.WriteLine($"ePMP elements not found ref: {NoElement.ToString()}");
+                //throw;
+            }
+            
 
             // reboot req handling popup
             // ref stackoverflow: https://stackoverflow.com/questions/12744576/selenium-c-sharp-accept-confirm-box
-            string pageSrc = browser.PageSource;
+            //string pageSrc = browser.PageSource;
             
             //find & click reboot button, currently not visible in DOM 
             browser.FindElementByClassName("navbar-toggle").Click();
@@ -134,16 +149,12 @@ namespace LMGD_Tester
             
 
             
-            string RadioStats = null;
+            
             //Handle pop up asking us if we're sure we want to reboot, yes we are. 
             BrowserHelper.HandleAlerts(browser);
 
             //Title's in ePMP radio are "preformated", will concantenate strings together and display. 
-            RadioStats = $"{ePMPUptime.ToString()}\n";
-            RadioStats += $"{ePMPRssi.ToString()}\n";
-            RadioStats += $"{ePMPSNR.ToString()}\n";
-            RadioStats += $"{ePMP_DlMod.ToString()}\n";
-            RadioStats += $"{ePMP_ULMod.ToString()}\n";
+            
 
             Console.WriteLine(RadioStats);
             Console.WriteLine("ePMP Complete...");
