@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using OpenQA.Selenium.Chrome;
+using System.Text.RegularExpressions;
 
 namespace LMGD_Tester
 {
@@ -16,7 +17,7 @@ namespace LMGD_Tester
         /// <param name="IP"></param>
         /// <param name="equipType"></param>
         /// <returns></returns>
-        public string PingBuilder(ChromeDriver browser, string equipType)
+        public string PingBuilder(ChromeDriver browser, string equipType, string IP)
         {
             ATA GetATA = new ATA();
             Radio GetRadio = new Radio();
@@ -30,66 +31,50 @@ namespace LMGD_Tester
             string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             int timeout = 10000;
-
-            //new idea: run from cmd prompt as external thingy
-            //ref: https://stackoverflow.com/questions/1469764/run-command-prompt-commands
-            //string cmdText = $"/C "; wait! will need to parse out IP first in order to ping it. 
-
-            //Considering option to just launch CLI and endlessly ping desired/found IP's, 
-            //this would need to be closed with each new run 
-
-            //ERROR Thrown: Unknown host, think it has something to do with http://ipaddress/ instead of a normal .com address or blank IP, psure windows cmd throws same error
-            //try
-            //{
-            //    PingReply reply = Pinger.Send(browser.Url, timeout, buffer, opt);
-            //    if (reply.Status == IPStatus.Success)
-            //    {
-            //        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
-            //        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
-            //        // successPacket++;
-            //    }
-            //    //if ping fails then RoundtripTime will be 0
-            //    else if (reply.RoundtripTime == 0)
-            //    {
-            //        Console.WriteLine($"Failed to receive reply from {browser.Url}");
-            //        return PingReplies += $"Failed to receive reply from {browser.Url}";
-            //        //failedPacket++;
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine($"Ping Error: {e.ToString()}");
-            //    throw;
-            //}
-
-
-
-
-
-            if (equipType == "radio")
+            Match IPMatch = Regex.Match(IP, @"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+            if(IPMatch.Success)
+            {
+                try
                 {
-                    //Call method to Determine Radio type, xfers control to Radio class.
-                    PingReplies += GetRadio.GetRadioType(browser);
-                }
-                //Calls ATA method based on equipType input. xfers control to ATA class. all scraped info will be added to ping replies and return to Main();
-                else if(equipType.Contains("ATA"))
-                {
-                    switch (equipType)
+                    PingReply reply = Pinger.Send(IPMatch.Value, timeout, buffer, opt);
+                    if (reply.Status == IPStatus.Success)
                     {
-                        case "ATA Cambium":
-                            PingReplies += GetATA.Cambium(browser);
-                            break;
-                        case "ATA SPA122":
-                            PingReplies += GetATA.Spa122(browser);
-                            break;
-                        case "ATA SPA2102":
-                            PingReplies += GetATA.Spa2102(browser);
-                            break;
-                        default:
-                            PingReplies += "Unable to determine ATA type";
-                            break;
+                        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
+                        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
+                        switch (equipType)
+                        {
+                            case "ATA Cambium":
+                                PingReplies += GetATA.Cambium(browser);
+                                break;
+                            case "ATA SPA122":
+                                PingReplies += GetATA.Spa122(browser);
+                                break;
+                            case "ATA SPA2102":
+                                PingReplies += GetATA.Spa2102(browser);
+                                break;
+                            case "radio":
+                                PingReplies += GetRadio.GetRadioType(browser);
+                                break;
+                            default:
+                                PingReplies += "Unable to determine Equipment type";
+                                break;
+                        }
+                        // successPacket++;
+                    }
+                    //if ping fails then RoundtripTime will be 0
+                    else if (reply.RoundtripTime == 0)
+                    {
+                        Console.WriteLine($"Failed to receive reply from {IPMatch.Value}");
+                        return PingReplies += $"Failed to receive reply from {IPMatch.Value}";
+                        //failedPacket++;
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Ping Error: {e.ToString()}");
+                    return PingReplies;
+                }
+            }
             
             return PingReplies; 
         }

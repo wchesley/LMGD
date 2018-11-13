@@ -98,6 +98,7 @@ namespace LMGD_Tester
             AtaIP[1].Click();
             //Should have ATA IP
             Console.WriteLine($"Selecting ATA...{AtaIP[0].Text}");
+            string ATA_IP = AtaIP[0].Text;
             AtaIP[0].Click();
             //page[0] holds FOPS search, 1 has ATA config, 2 should be ATA
             browser.SwitchTo().Window(browser.WindowHandles[2]);
@@ -111,17 +112,17 @@ namespace LMGD_Tester
                 case "Cambium R201P":
                     Console.WriteLine("Found Cambium ATA, Attempting Login/Reboot...");
                     //Call Cambium logic return to ATA_Info;
-                    ATA_Info += PingTest.PingBuilder(browser, "ATA Cambium");
+                    ATA_Info += PingTest.PingBuilder(browser, "ATA Cambium", ATA_IP);
                     break;
                 case "Linksys SPA122":
                     Console.WriteLine("Found SPA122, Attempting Login/Reboot...");
                     //Call Cisco SPA122 logic
-                    ATA_Info += PingTest.PingBuilder(browser, "ATA SPA122");
+                    ATA_Info += PingTest.PingBuilder(browser, "ATA SPA122", ATA_IP);
                     break;
                 case "Linksys SPA2102":
                     Console.WriteLine("Found SPA2102, Attempting Login/Reboot but you might be fucked anyway lol it's a POS...");
                     //Call SPA 2102 logic
-                    ATA_Info += PingTest.PingBuilder(browser, "ATA SPA2102");
+                    ATA_Info += PingTest.PingBuilder(browser, "ATA SPA2102", ATA_IP);
                     break;
                 default:
                     Console.WriteLine(ATAError);
