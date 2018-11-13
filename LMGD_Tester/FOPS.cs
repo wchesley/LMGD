@@ -173,7 +173,7 @@ namespace LMGD_Tester
             browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
             Console.WriteLine(browser.Url);
             //go to ping/crawl radio. 
-            Radio_Info += PingTest.PingBuilder(browser, "radio");
+            Radio_Info += PingTest.PingBuilder(browser, "radio", browser.Url);
             
             
             return Radio_Info;
