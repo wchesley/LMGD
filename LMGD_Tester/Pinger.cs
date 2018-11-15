@@ -43,7 +43,7 @@ namespace LMGD_Tester
                     if (reply.Status == IPStatus.Success)
                     {
                         Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
-                        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
+                        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}\n";
                         
                         switch (equipType)
                         {
