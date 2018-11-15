@@ -15,7 +15,7 @@ namespace LMGD_Tester
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"user-data-directory=C:\Users\wchesley\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
-            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
+            browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(25);
             browser.Navigate().GoToUrl(URL);
             return browser;
         }

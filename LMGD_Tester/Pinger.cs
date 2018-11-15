@@ -32,35 +32,11 @@ namespace LMGD_Tester
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             int timeout = 10000;
             Console.WriteLine($"Passed to RegEx: {IP}");
-            //temp moved out of ping block as I suspect it's causing issues...
-            switch (equipType)
-            {
-                case "ATA Cambium":
-                    Console.WriteLine("Launching Cambium logic...");
-                    PingReplies += GetATA.Cambium(browser);
-                    break;
-                case "ATA SPA122":
-                    Console.WriteLine("Launching SPA122 logic...");
-                    PingReplies += GetATA.Spa122(browser);
-                    break;
-                case "ATA SPA2102":
-                    Console.WriteLine("Launching SPA2102 logic...");
-                    PingReplies += GetATA.Spa2102(browser);
-                    break;
-                case "radio":
-                    Console.WriteLine("Launching Radio logic...");
-                    PingReplies += GetRadio.GetRadioType(browser);
-                    break;
-                default:
-                    PingReplies += "Unable to determine Equipment type";
-                    break;
-            }
+           
             //Tested this regex string in calculator and appears to work on IP's with stuffs before and after actuall address.
             Regex ip = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
             Match result = ip.Match(IP);
             Console.WriteLine($"{equipType} IP: {result}");
-
-            {
                 try
                 {
                     PingReply reply = Pinger.Send(result.Value, timeout, buffer, opt);
@@ -68,8 +44,29 @@ namespace LMGD_Tester
                     {
                         Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
                         PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
-
-                        // successPacket++;
+                        
+                        switch (equipType)
+                        {
+                            case "ATA Cambium":
+                                Console.WriteLine("Launching Cambium logic...");
+                                PingReplies += GetATA.Cambium(browser);
+                                break;
+                            case "ATA SPA122":
+                                Console.WriteLine("Launching SPA122 logic...");
+                                PingReplies += GetATA.Spa122(browser);
+                                break;
+                            case "ATA SPA2102":
+                                Console.WriteLine("Launching SPA2102 logic...");
+                                PingReplies += GetATA.Spa2102(browser);
+                                break;
+                            case "radio":
+                                Console.WriteLine("Launching Radio logic...");
+                                PingReplies += GetRadio.GetRadioType(browser);
+                                break;
+                            default:
+                                PingReplies += "Unable to determine Equipment type";
+                                break;
+                        }
                     }
                     //if ping fails then RoundtripTime will be 0
                     else if (reply.RoundtripTime == 0)
@@ -84,7 +81,6 @@ namespace LMGD_Tester
                     Console.WriteLine($"Ping Error: {e.ToString()}");
                     return PingReplies;
                 }
-            }
 
             return PingReplies; 
         }
