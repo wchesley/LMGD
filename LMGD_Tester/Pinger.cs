@@ -55,34 +55,36 @@ namespace LMGD_Tester
                     PingReplies += "Unable to determine Equipment type";
                     break;
             }
-            //Regex ip = new Regex("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
-            //MatchCollection result = ip.Matches(IP);
-            //Console.WriteLine($"{equipType} IP: {result[0]}");
-            //{
-            //    try
-            //    {
-            //        PingReply reply = Pinger.Send(IPMatch.Value, timeout, buffer, opt);
-            //        if (reply.Status == IPStatus.Success)
-            //        {
-            //            Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
-            //            PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
+            //Tested this regex string in calculator and appears to work on IP's with stuffs before and after actuall address.
+            Regex ip = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+            Match result = ip.Match(IP);
+            Console.WriteLine($"{equipType} IP: {result}");
 
-            //            // successPacket++;
-            //        }
-            //        //if ping fails then RoundtripTime will be 0
-            //        else if (reply.RoundtripTime == 0)
-            //        {
-            //            Console.WriteLine($"Failed to receive reply from {IPMatch.Value}");
-            //            return PingReplies += $"Failed to receive reply from {IPMatch.Value}";
-            //            //failedPacket++;
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Console.WriteLine($"Ping Error: {e.ToString()}");
-            //        return PingReplies;
-            //    }
-            //}
+            {
+                try
+                {
+                    PingReply reply = Pinger.Send(result.Value, timeout, buffer, opt);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
+                        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}";
+
+                        // successPacket++;
+                    }
+                    //if ping fails then RoundtripTime will be 0
+                    else if (reply.RoundtripTime == 0)
+                    {
+                        Console.WriteLine($"Failed to receive reply from {result.Value}");
+                        return PingReplies += $"Failed to receive reply from {result.Value}";
+                        //failedPacket++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Ping Error: {e.ToString()}");
+                    return PingReplies;
+                }
+            }
 
             return PingReplies; 
         }

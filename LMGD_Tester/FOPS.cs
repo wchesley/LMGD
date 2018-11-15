@@ -147,7 +147,16 @@ namespace LMGD_Tester
             Console.WriteLine("Searching for Radio...");
             var GetRadio = new Radio();
             string Radio_Info = "";
-            browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_RadioUrl);
+            try
+            {
+                browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_RadioUrl);
+            }
+            catch (TimeoutException e)
+            {
+                Console.WriteLine($"Timed out searching for radio...{e.ToString()}");
+                return Radio_Info; 
+            }
+            
             if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
                 FOPS_Login("wchesley","fuimdrunk1",browser,FOPS_HomeUrl+FOPS_RadioUrl);
