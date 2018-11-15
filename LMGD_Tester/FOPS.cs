@@ -61,7 +61,7 @@ namespace LMGD_Tester
             string ATA_Info = "";
             var GetATA = new ATA(); 
             //Verify Logged into FOPS, then Search for ATA
-            browser.Navigate().GoToUrl($"https://fops.amatechtel.com/tools/ataprovisioning");
+            browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_ATAUrl);
             if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
                 FOPS_Login("wchesley","fuimdrunk1",browser,FOPS_HomeUrl+FOPS_ATAUrl);
@@ -147,7 +147,7 @@ namespace LMGD_Tester
             Console.WriteLine("Searching for Radio...");
             var GetRadio = new Radio();
             string Radio_Info = "";
-            browser.Navigate().GoToUrl("https://fops.amatechtel.com/tools/su_config/default.asp");
+            browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_RadioUrl);
             if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
                 FOPS_Login("wchesley","fuimdrunk1",browser,FOPS_HomeUrl+FOPS_RadioUrl);
@@ -176,7 +176,7 @@ namespace LMGD_Tester
             browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
             Console.WriteLine(browser.Url);
             //go to ping/crawl radio. 
-            Radio_Info += PingTest.PingBuilder(browser, "radio", browser.Url);
+            Radio_Info += PingTest.PingBuilder(browser, "radio", RadioTable.Text);
             
             
             return Radio_Info;
