@@ -175,6 +175,8 @@ namespace LMGD_Tester
             //need to determine radio type via webpage DOM 
             var RadioTable = browser.FindElementByTagName("td");
             Console.WriteLine($"Found Radio IP: {RadioTable.Text}");
+            //created to avoid stale refrence exception on later call. 
+            string radioIP = RadioTable.Text; 
             //Uri RadioIP = RadioTable.Text; 
             //logic to ping radio goes here. 
 
@@ -185,7 +187,7 @@ namespace LMGD_Tester
             browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
             Console.WriteLine(browser.Url);
             //go to ping/crawl radio. 
-            Radio_Info += PingTest.PingBuilder(browser, "radio", RadioTable.Text);
+            Radio_Info += PingTest.PingBuilder(browser, "radio", radioIP);
             
             
             return Radio_Info;
