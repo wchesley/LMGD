@@ -169,7 +169,10 @@ namespace LMGD_Tester
             //Uri RadioIP = RadioTable.Text; 
             //logic to ping radio goes here. 
 
-
+            if(RadioTable.Text.Contains("Nothing"))
+            {
+                return Radio_Info +="No IP found for radio";
+            }
             browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
             Console.WriteLine(browser.Url);
             //go to ping/crawl radio. 

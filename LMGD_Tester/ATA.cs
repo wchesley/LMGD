@@ -222,6 +222,7 @@ namespace LMGD_Tester
         public string Spa2102(ChromeDriver browser)
         {
             string ATAInfo = "Found SPA2102, just create a ticket a this point, this thing is an\nancient piece of junk that needs to be replaced. ";
+            BrowserHelper.CreateBrowser(browser.Url);
             return ATAInfo;
         }
 
