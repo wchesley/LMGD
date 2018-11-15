@@ -16,7 +16,7 @@ namespace LMGD_Tester
 {
     class Program
     {
-        
+        [STAThread]
         static void Main(string[] args)
         {
             //declare variables. 
@@ -65,9 +65,10 @@ namespace LMGD_Tester
             Console.WriteLine(ReturnedATA.ToString());
             var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
             Console.WriteLine(ReturnedRadio.ToString());
-            browser.Quit();
+            
             Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}\nEND>>>");
             System.Windows.Forms.Clipboard.SetText($"Radio:\n{ReturnedRadio}\nATA:\n{ReturnedATA}");
+            browser.Quit();
             Console.ReadKey();
         }
     
