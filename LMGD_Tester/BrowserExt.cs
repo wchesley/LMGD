@@ -57,6 +57,14 @@ namespace LMGD_Tester
             {
                 isPresent = false;
             }
+            catch(TimeoutException e)
+            {
+                Console.WriteLine($"Timed out looking for element on page, ref: {e.ToString()}");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Some other error occured looking for element: {e.ToString()}");
+            }
 
             return isPresent; 
         }
