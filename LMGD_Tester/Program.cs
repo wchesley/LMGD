@@ -30,7 +30,7 @@ namespace LMGD_Tester
             FOPS FOPSPage = new FOPS();
 
             // attempt to load sensitive info from local xml file. 
-            XElement LMGD_Doc = XElement.Load(@"C:\Users\Walker\Documents\LMGD_Data.xml");
+            XElement LMGD_Doc = XElement.Load(@"C:\LMGD_Data.xml");
             username = LMGD_Doc.Element("username").Value;
             password = LMGD_Doc.Element("password").Value;
 

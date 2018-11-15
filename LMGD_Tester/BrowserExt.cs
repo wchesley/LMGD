@@ -13,7 +13,7 @@ namespace LMGD_Tester
         public ChromeDriver CreateHeadlessBrowser(string URL)
         {
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"user-data-directory=C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
+            chromeOptions.AddArguments("headless", "whitelisted-ips=''", @"user-data-directory=C:\Users\wchesley\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
             browser.Navigate().GoToUrl(URL);
@@ -22,7 +22,7 @@ namespace LMGD_Tester
         public ChromeDriver CreateBrowser(string URL)
         {
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("whitelisted-ips=''", @"user-data-directory=C:\Users\Walker\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
+            chromeOptions.AddArguments("whitelisted-ips=''", @"user-data-directory=C:\Users\wchesley\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
             var browser = new ChromeDriver(chromeOptions);
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
             browser.Navigate().GoToUrl(URL);
