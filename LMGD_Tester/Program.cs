@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,18 +29,33 @@ namespace LMGD_Tester
             string AccountNumber = "";
             string ATAError = "ATA Error occured... ";
             FOPS FOPSPage = new FOPS();
-
-            // attempt to load sensitive info from local xml file. 
-            XElement LMGD_Doc = XElement.Load(@"C:\LMGD_Data.xml");
-            username = LMGD_Doc.Element("username").Value;
-            password = LMGD_Doc.Element("password").Value;
-
             //init headless chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
             //init GUI chrome browser, mostly just for testings sake. 
             //var browser = new BrowserExt().CreateBrowser(FOPS);
-            //log into FOPS
-            FOPSPage.FOPS_Login(username, password, browser, FOPS + AtaProvisioning);
+            // attempt to load sensitive info from local xml file. 
+            try
+            {
+                XElement LMGD_Doc = XElement.Load(@"C:\LMGD_Data.xml");
+                username = LMGD_Doc.Element("username").Value;
+                password = LMGD_Doc.Element("password").Value;
+
+                //log into FOPS
+                FOPSPage.FOPS_Login(username, password, browser, FOPS + AtaProvisioning);
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine($"Error Loading data file from disk: {e.ToString()}\nPres any key to quit... ");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            catch (Exception e2)
+            {
+                Console.WriteLine($"Some other Error occured, please review: {e2.ToString()}\nPress any key to exit...");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            
             //Get customer account number from end user...
             Console.WriteLine("Enter Account number: ");
             AccountNumber = Console.ReadLine();
