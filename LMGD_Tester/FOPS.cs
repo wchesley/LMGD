@@ -90,16 +90,24 @@ namespace LMGD_Tester
         /// <param name="browser"></param>
         public ChromeDriver FOPS_Login(ChromeDriver browser, string PrevURL)
         {
+            try
+            {
+                browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_LoginUrl);
+                var userID = browser.FindElementById("username");
+                var pswd = browser.FindElementById("password");
+                var login = browser.FindElementById("login_form");
+                userID.SendKeys(username);
+                pswd.SendKeys(password);
+                login.Submit();
+                browser.Navigate().GoToUrl(PrevURL);
+                return browser;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error logging into FOPS: \n{e.ToString()}");
+                throw;
+            }
             
-            browser.Navigate().GoToUrl(FOPS_HomeUrl + FOPS_LoginUrl);
-            var userID = browser.FindElementById("username");
-            var pswd = browser.FindElementById("password");
-            var login = browser.FindElementById("login_form");
-            userID.SendKeys(username);
-            pswd.SendKeys(password);
-            login.Submit();
-            browser.Navigate().GoToUrl(PrevURL);
-            return browser;
         }
 
         /// <summary>
@@ -133,6 +141,10 @@ namespace LMGD_Tester
             catch (TimeoutException)
             {
                 return ATAError += " Timeout Error on FOPS page, try again..."; 
+            }
+            catch(Exception e)
+            {
+                return ATAError += " " + e.ToString();
             }
             try
             {
@@ -203,9 +215,9 @@ namespace LMGD_Tester
                 }
 
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-
+                ATA_Info = $"Some other error: {e.ToString()}";
                 throw;
             }
 
@@ -231,44 +243,55 @@ namespace LMGD_Tester
             }
             catch (TimeoutException e)
             {
-                Console.WriteLine($"Timed out searching for radio...{e.ToString()}");
+                Console.WriteLine($"Timed out getting to SU Config...ref:\n{e.ToString()}");
                 return Radio_Info; 
             }
-            
+            catch(Exception e)
+            {
+                return Radio_Info = $"Some other error: {e.ToString()}";
+            }
             if(browser.Url.ToString().Contains(FOPS_LoginUrl)==true)
             {
                 FOPS_Login(browser,FOPS_HomeUrl+FOPS_RadioUrl);
             }
-            var custNumber = browser.FindElementByName("customer_number");
-            var RadioForm = browser.FindElementsByName("B1");
-            //var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
-            custNumber.SendKeys(customerNumber);
-            RadioForm[2].Submit();
-           
-            Console.WriteLine(browser.Url);
-
-
-            //Radio IP should always be first item in td for given table...will need to handle if multiple radios are presented. 
-            //again need to test via ping if radio is up or not. 
-            //need to determine radio type via webpage DOM 
-            var RadioTable = browser.FindElementByTagName("td");
-            Console.WriteLine($"Found Radio IP: {RadioTable.Text}");
-            //created to avoid stale refrence exception on later call. 
-            string radioIP = RadioTable.Text; 
-            //Uri RadioIP = RadioTable.Text; 
-            //logic to ping radio goes here. 
-
-            if(RadioTable.Text.Contains("Nothing"))
+            try
             {
-                return Radio_Info +="No IP found for radio";
+                var custNumber = browser.FindElementByName("customer_number");
+                var RadioForm = browser.FindElementsByName("B1");
+                //var RadioForm = browser.FindElementByXPath(@"//*[@id='div_3_contents']/form");
+                custNumber.SendKeys(customerNumber);
+                RadioForm[2].Submit();
+
+                Console.WriteLine(browser.Url);
+
+
+                //Radio IP should always be first item in td for given table...will need to handle if multiple radios are presented. 
+                //again need to test via ping if radio is up or not. 
+                //need to determine radio type via webpage DOM 
+                var RadioTable = browser.FindElementByTagName("td");
+                Console.WriteLine($"Found Radio IP: {RadioTable.Text}");
+                //created to avoid stale refrence exception on later call. 
+                string radioIP = RadioTable.Text;
+                //Uri RadioIP = RadioTable.Text; 
+                //logic to ping radio goes here. 
+
+                if (RadioTable.Text.Contains("Nothing"))
+                {
+                    return Radio_Info += "No IP found for radio";
+                }
+                browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
+                Console.WriteLine(browser.Url);
+                //go to ping/crawl radio. 
+                Radio_Info += PingTest.PingBuilder(browser, "radio", radioIP);
+
+
+                return Radio_Info;
             }
-            browser.Navigate().GoToUrl($"http://{RadioTable.Text}");
-            Console.WriteLine(browser.Url);
-            //go to ping/crawl radio. 
-            Radio_Info += PingTest.PingBuilder(browser, "radio", radioIP);
+            catch (Exception e)
+            {
+                return Radio_Info = $"error: {e.ToString()}";
+            }
             
-            
-            return Radio_Info;
         }
     }
 }
