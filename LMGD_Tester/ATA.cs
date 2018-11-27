@@ -37,18 +37,26 @@ namespace LMGD_Tester
                 browser.FindElementById("login").Click();
             }
             //Get phone lines and their status, format and add to ATAInfo string. 
+            try
+            {
+                var line1 = browser.FindElementById("sipStatus_1").Text;
+                var line1_hook = browser.FindElementById("hookStatus_1").Text;
+                var line1_Status = browser.FindElementById("useStatus_1").Text;
+                var line2 = browser.FindElementById("sipStatus_2").Text;
+                var line2_hook = browser.FindElementById("hookStatus_2").Text;
+                var line2_Status = browser.FindElementById("useStatus_2").Text;
+                ATAInfo = $"Phone lines in ATA:\nLine 1 is {line1} and is {line1_hook} hook and currently {line1_Status}\n";
+                ATAInfo += $"Phone line 2 is {line2} and is {line2_hook} hook and currently {line2_Status}\n";
+                //Find DHCP table
+                var LAN_HostBtn = browser.FindElementById("menuSubList");
+                LAN_HostBtn.FindElements(By.TagName("li"))[1].Click();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error on ATA homepage, ref: {e.ToString()}");
+                return ATAInfo = "Couldn't get into ATA"; 
+            }
             
-            var line1 = browser.FindElementById("sipStatus_1").Text;
-            var line1_hook = browser.FindElementById("hookStatus_1").Text;
-            var line1_Status = browser.FindElementById("useStatus_1").Text;
-            var line2 = browser.FindElementById("sipStatus_2").Text;
-            var line2_hook = browser.FindElementById("hookStatus_2").Text;
-            var line2_Status = browser.FindElementById("useStatus_2").Text;
-            ATAInfo = $"Phone lines in ATA:\nLine 1 is {line1} and is {line1_hook} hook and currently {line1_Status}\n";
-            ATAInfo += $"Phone line 2 is {line2} and is {line2_hook} hook and currently {line2_Status}\n";
-            //Find DHCP table
-            var LAN_HostBtn = browser.FindElementById("menuSubList");
-            LAN_HostBtn.FindElements(By.TagName("li"))[1].Click();
             //Gather DHCP table info.. 
             try
             {
@@ -83,6 +91,11 @@ namespace LMGD_Tester
                 ATAInfo += "Nothing found in DHCP Table";
                 //throw;
             }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Some other DHCP error occured... {e.ToString()}");
+                ATAInfo += "Nothing found in DHCP table";
+            }
             
 
             //Should be all done with ATA, go ahead and reboot dat hoe!
@@ -91,16 +104,14 @@ namespace LMGD_Tester
             //Combine information
             
             ATAInfo += "Rebooted / Rebuilt ATA";
-            string JSAlertError = null; 
             try
             {
                 var handleAlert = browser.SwitchTo().Alert();
-
                 handleAlert.Accept();
             }
             catch (Exception e)
             {
-                JSAlertError = e.ToString();
+                Console.WriteLine("Couldn't handle Alert, was not able to reboot ATA");
                 Console.WriteLine(e.StackTrace);
             }
             return ATAInfo;
@@ -131,12 +142,20 @@ namespace LMGD_Tester
             {
                 return ATAInfo = $"Some error occured logging into ATA, ref: {e.ToString()}";
             }
+
+            try
+            {
+                //Go to network setup page. 
+                browser.FindElementById("trt_Network_Service.asp").Click();
+                var networkSettings = browser.FindElementById("d_4");
+                networkSettings.FindElement(By.TagName("a")).Click();
+            }
+            catch (Exception e)
+            {
+
+                return ATAInfo = $"Couldn't get into ATA {e.ToString()}";
+            }
             
-            
-            //Go to network setup page. 
-            browser.FindElementById("trt_Network_Service.asp").Click();
-            var networkSettings = browser.FindElementById("d_4");
-            networkSettings.FindElement(By.TagName("a")).Click();
             //Show DHCP reservations. 
             browser.FindElementById("t3").Click();
             //id's could be numbered like an array? need to find an spa122 with mulitples to test that, too bad they're becoming rare...or is it that bad? lolol
@@ -164,14 +183,15 @@ namespace LMGD_Tester
             //    Console.WriteLine($"DHCP client name: {DHCP_Name[dhcp_list].Text} IP: {DHCP_IP[dhcp_list].Text} MAC: {DHCP_MAC[dhcp_list].Text}");
             //}
 
-            //Check phones
-            browser.FindElementById("trt_voice.asp").Click();
-            //this page is a mess, hope we really REALLY can count...you really don't wanna see this DOM man. but if you do uncomment this next line, ye be warned
-            //Console.WriteLine(browser.PageSource.ToString());
-
-            //Data I want is stored in iframe will have to switch in and out of it.
+            
             try
             {
+                //Check phones
+                browser.FindElementById("trt_voice.asp").Click();
+                //this page is a mess, hope we really REALLY can count...you really don't wanna see this DOM man. but if you do uncomment this next line, ye be warned
+                //Console.WriteLine(browser.PageSource.ToString());
+
+                //Data I want is stored in iframe will have to switch in and out of it.
                 browser.SwitchTo().Frame(browser.FindElementById("iframe"));
 
                 //Should be leading DIV containing ALL the info related to voice/uptime. 
