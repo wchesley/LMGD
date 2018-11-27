@@ -21,18 +21,18 @@ namespace LMGD_Tester
         {
             string radio = "Nothing found..."; 
             BrowserExt TestRadio = new BrowserExt();
-            if(TestRadio.isElemenentPresent(By.Id("CanopyUsername"), browser) == true)
+            if(TestRadio.IsElemenentPresent(By.Id("CanopyUsername"), browser) == true)
             {
                 Console.WriteLine("Found 450 Radio...attempting login/reboot");
                 return radio = ScrapeFourFifty(browser);
 
             }
-            else if(TestRadio.isElemenentPresent(By.Id("loginBtn"), browser) == true)
+            else if(TestRadio.IsElemenentPresent(By.Id("loginBtn"), browser) == true)
             {
                 Console.WriteLine("Found ePMP radio...attempting login/reboot");
                 return radio = Scrape_ePMP(browser);
             }
-            else if(TestRadio.isElemenentPresent(By.Id("login_form"), browser) == true)
+            else if(TestRadio.IsElemenentPresent(By.Id("login_form"), browser) == true)
             {
                 Console.WriteLine("Found Wimax radio...attempting login/reboot");
                return radio = ScrapeWimax(browser);

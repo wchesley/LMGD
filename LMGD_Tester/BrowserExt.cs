@@ -30,7 +30,7 @@ namespace LMGD_Tester
         }
 
 
-        public static bool isAttributePresent(ChromeWebElement element, string Attribute)
+        public static bool IsAttributePresent(ChromeWebElement element, string Attribute)
         {
             bool isPresent = false;
             try
@@ -45,7 +45,7 @@ namespace LMGD_Tester
             return isPresent;
         }
         //Logic if Element is present. 
-        public bool isElemenentPresent(By by, ChromeDriver browser)
+        public bool IsElemenentPresent(By by, ChromeDriver browser)
         {
             bool isPresent = false;
             try

@@ -25,7 +25,7 @@ namespace LMGD_Tester
             browser.FindElementById("user_name").SendKeys(userName);
             browser.FindElementById("password").SendKeys(passWord);
            
-            if(ElementCheck.isElemenentPresent(By.Id("login"),browser) == true)
+            if(ElementCheck.IsElemenentPresent(By.Id("login"),browser) == true)
             {
                 browser.FindElementById("login").Click();
                 //loginBtn.Click();
