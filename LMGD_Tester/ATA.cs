@@ -45,8 +45,8 @@ namespace LMGD_Tester
                 var line2 = browser.FindElementById("sipStatus_2").Text;
                 var line2_hook = browser.FindElementById("hookStatus_2").Text;
                 var line2_Status = browser.FindElementById("useStatus_2").Text;
-                ATAInfo = $"Phone lines in ATA:\nLine 1 is {line1} and is {line1_hook} hook and currently {line1_Status}\n";
-                ATAInfo += $"Phone line 2 is {line2} and is {line2_hook} hook and currently {line2_Status}\n";
+                ATAInfo = $"Phone lines in ATA:\nline 1 is {line1} and is {line1_hook} hook and currently {line1_Status}\n";
+                ATAInfo += $"line 2 is {line2} and is {line2_hook} hook and currently {line2_Status}\n";
                 //Find DHCP table
                 var LAN_HostBtn = browser.FindElementById("menuSubList");
                 LAN_HostBtn.FindElements(By.TagName("li"))[1].Click();
@@ -63,7 +63,7 @@ namespace LMGD_Tester
                 var DHCP_Table = browser.FindElementById("PageList");
                 DHCP_Table = DHCP_Table.FindElement(By.TagName("table"));
                 var DHCP_Rows = DHCP_Table.FindElements(By.TagName("tr"));
-                int DHCP_Count = DHCP_Rows.Count;
+                var DHCP_Count = DHCP_Rows.Count;
                 string DHCP_Info = $"{DHCP_Count.ToString()} Devices were found in DHCP Table:\n";
 
                 //Iterate over each row, grab all DHCP items listed there 
