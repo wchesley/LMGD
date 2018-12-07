@@ -42,9 +42,10 @@ namespace LMGD_Tester
                     PingReply reply = Pinger.Send(result.Value, timeout, buffer, opt);
                     if (reply.Status == IPStatus.Success)
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
                         PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}\n";
-                        
+                        Console.ResetColor(); 
                         switch (equipType)
                         {
                             case "ATA Cambium":
@@ -71,8 +72,11 @@ namespace LMGD_Tester
                     //if ping fails then RoundtripTime will be 0
                     else if (reply.RoundtripTime == 0)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"Failed to receive reply from {result.Value}");
+                        Console.ResetColor();
                         return PingReplies += $"Failed to receive reply from {result.Value}";
+                    
                         //failedPacket++;
                     }
                 }
