@@ -142,6 +142,10 @@ namespace LMGD_Tester
             {
                 return ATAError += " Timeout Error on FOPS page, try again..."; 
             }
+            catch(StaleElementReferenceException e)
+            {
+                return ATAError += "Stale element ref exception, was not able to get to ATA page, please try again. "; 
+            }
             catch(Exception e)
             {
                 return ATAError += " " + e.ToString();
