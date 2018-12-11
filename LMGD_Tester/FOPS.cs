@@ -144,7 +144,7 @@ namespace LMGD_Tester
             }
             catch(StaleElementReferenceException e)
             {
-                return ATAError += "Stale element ref exception, was not able to get to ATA page, please try again. "; 
+                return ATAError += $"Stale element ref exception, was not able to get to ATA page, please try again. ref code: {e.ToString()} "; 
             }
             catch(Exception e)
             {

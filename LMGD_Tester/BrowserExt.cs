@@ -41,7 +41,7 @@ namespace LMGD_Tester
                     isPresent = true;
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e) { Console.WriteLine(e.ToString()); }
             return isPresent;
         }
         //Logic if Element is present. 
