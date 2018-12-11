@@ -20,11 +20,11 @@ namespace LMGD_Tester
         {
             //declare variables. 
             string FOPS = "https://fops.amatechtel.com";
-            string Login = "/login.asp";
+            
             string AtaProvisioning = "/tools/ataprovisioning/";
-            string SuConfig = "/tools/su_config/default.asp";
+            
             string AccountNumber = "";
-            string ATAError = "ATA Error occured... ";
+            
             FOPS FOPSPage = new FOPS();
             //init headless chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
