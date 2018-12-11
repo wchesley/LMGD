@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
 namespace LMGD_Tester
