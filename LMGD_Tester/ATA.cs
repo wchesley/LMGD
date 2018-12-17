@@ -60,11 +60,10 @@ namespace LMGD_Tester
                 var DHCP_Rows = DHCP_Table.FindElements(By.TagName("tr"));
                 var DHCP_Count = DHCP_Rows.Count;
                 string DHCP_Info = $"{DHCP_Count.ToString()} Devices were found in DHCP Table:\n";
-
+                int counter = 1;
                 //Iterate over each row, grab all DHCP items listed there 
                 foreach (var Row in DHCP_Rows)
                 {
-                    int counter = 1;
                     var info = Row.FindElements(By.TagName("td"));
                     /*Should be 7 items per Entry in DHCP table
                      * 0 - MAC address
