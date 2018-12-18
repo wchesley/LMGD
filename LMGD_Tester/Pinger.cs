@@ -42,8 +42,8 @@ namespace LMGD_Tester
                     if (reply.Status == IPStatus.Success)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}");
-                        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}\n";
+                        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms");
+                        PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms \n";
                         Console.ResetColor(); 
                         switch (equipType)
                         {
