@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics; 
 //Testing app for new features/Ideas/Groundwork for LMGD app
 
 namespace LMGD_Tester
@@ -14,7 +14,8 @@ namespace LMGD_Tester
             string AtaProvisioning = "/tools/ataprovisioning/";
             string AccountNumber = "";
             FOPS FOPSPage = new FOPS();
-
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
             //init headless chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
 
@@ -41,10 +42,14 @@ namespace LMGD_Tester
             Console.WriteLine(ReturnedATA.ToString());
             //Now Grab Radio info
             var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
-            Console.WriteLine(ReturnedRadio.ToString());
-            
+            timer.Stop();
+            TimeSpan timeSpan = timer.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds / 10);
             Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}\nEND>>>");
+            Console.WriteLine($"RunTime: {elapsedTime}");
             System.Windows.Forms.Clipboard.SetText($"Radio:\n{ReturnedRadio}\nATA:\n{ReturnedATA}");
+            Console.WriteLine("Copied data to clipboard, press any key to exit...");
             //Clean up. 
             browser.Quit();
             Console.ReadKey();
