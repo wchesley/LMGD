@@ -11,30 +11,41 @@ namespace LMGD_Tester
         {
             //declare variables. 
             string FOPS = "https://fops.amatechtel.com";
-            
             string AtaProvisioning = "/tools/ataprovisioning/";
-            
             string AccountNumber = "";
-            
             FOPS FOPSPage = new FOPS();
+
             //init headless chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
+
             //init GUI chrome browser, mostly just for testings sake. 
             //var browser = new BrowserExt().CreateBrowser(FOPS);
+
             FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
-            
-            
-            //Get customer account number from end user...
-            Console.WriteLine("Enter Account number: ");
-            AccountNumber = Console.ReadLine(); 
+                      
+            /*support for command line arguements:
+             * Handled as LMGD_Tester.exe <custAccountNumber>
+             * no other arguements are needed and will be discarded. 
+             * if no arguement is passed app will ask for account number
+             * before procedding
+            */
+            if(args.Length == 0)
+            {
+                //Get customer account number from end user...
+                Console.WriteLine("Enter Account number: ");
+                AccountNumber = Console.ReadLine();
+            }
+             
             //get ATA Info first
             var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
             Console.WriteLine(ReturnedATA.ToString());
+            //Now Grab Radio info
             var ReturnedRadio = FOPSPage.GetRadioIP(browser, AccountNumber);
             Console.WriteLine(ReturnedRadio.ToString());
             
             Console.WriteLine($"Results: \n{ReturnedRadio}\n{ReturnedATA}\nEND>>>");
             System.Windows.Forms.Clipboard.SetText($"Radio:\n{ReturnedRadio}\nATA:\n{ReturnedATA}");
+            //Clean up. 
             browser.Quit();
             Console.ReadKey();
             Environment.Exit(0);

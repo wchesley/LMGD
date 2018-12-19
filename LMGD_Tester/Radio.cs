@@ -86,7 +86,8 @@ namespace LMGD_Tester
             var FourFifty_Stats = $"Uptime: {FourFifty_Uptime}\n";
             FourFifty_Stats += $"RSSI: {FourFifty_Rssi}\n";
             FourFifty_Stats += $"SNR: {FourFifty_Snr}\n";
-            FourFifty_Stats += $"Ethernet Status: {FourFifty_EthernetStats}";
+            FourFifty_Stats += $"Ethernet Status: {FourFifty_EthernetStats}\n";
+            Console.WriteLine(FourFifty_Stats);
             return FourFifty_Stats;
 	    }
 	    
@@ -129,8 +130,15 @@ namespace LMGD_Tester
             }
             catch (NoSuchElementException NoElement)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"ePMP elements not found ref: {NoElement.ToString()}");
-                //throw;
+                Console.ResetColor();
+            }
+            catch (ElementNotVisibleException NoSee)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Cannot see elements on Webpage: {NoSee.ToString()}");
+                Console.ResetColor();
             }
             
 
