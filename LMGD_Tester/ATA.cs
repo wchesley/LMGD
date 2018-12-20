@@ -143,18 +143,13 @@ namespace LMGD_Tester
                 browser.FindElementById("trt_Network_Service.asp").Click();
                 var networkSettings = browser.FindElementById("d_4");
                 networkSettings.FindElement(By.TagName("a")).Click();
-            }
-            catch (Exception e)
-            {
 
-                return ATAInfo = $"Couldn't get into ATA {e.ToString()}";
-            }
-            
-            //Show DHCP reservations. 
-            browser.FindElementById("t3").Click();
-            //id's could be numbered like an array? need to find an spa122 with mulitples to test that, too bad they're becoming rare...or is it that bad? lolol
-            try
-            {
+
+
+                //Show DHCP reservations. 
+                browser.FindElementById("t3").Click();
+                //id's could be numbered like an array? need to find an spa122 with mulitples to test that, too bad they're becoming rare...or is it that bad? lolol
+
                 var DHCP_Name = browser.FindElementByName("dhcp_select_name_0");
                 var DHCP_IP = browser.FindElementByName("dhcp_select_ip_0");
                 var DHCP_MAC = browser.FindElementByName("dhcp_select_mac_0");
@@ -166,7 +161,12 @@ namespace LMGD_Tester
                 ATAInfo += "Nothing found in DCHP table\n";
                 //throw;
             }
-            
+            catch (Exception e)
+            {
+
+                return ATAInfo = $"Couldn't get into ATA {e.ToString()}";
+            }
+
             //Considering there's only one ethernet port on the SPA122, will assume there's one item in DHCP, not always 100%
             //accurate as not every customer lets SPA122 run DHCP, but should be enough to go off of as far as equipment functionality
             //ATAInfo += $"Number of items found in DHCP: {DHCP_IP.Count.ToString()}";
@@ -177,7 +177,7 @@ namespace LMGD_Tester
             //    Console.WriteLine($"DHCP client name: {DHCP_Name[dhcp_list].Text} IP: {DHCP_IP[dhcp_list].Text} MAC: {DHCP_MAC[dhcp_list].Text}");
             //}
 
-            
+
             try
             {
                 //Check phones
@@ -236,7 +236,32 @@ namespace LMGD_Tester
         public string Spa2102(ChromeDriver browser)
         {
             string ATAInfo = "Found SPA2102, just create a ticket a this point, this thing is an\nancient piece of junk that needs to be replaced. ";
-            BrowserHelper.CreateBrowser(browser.Url);
+            var OrgURL = browser.Url;
+            try
+            {
+                //have to dismiss alert first go around, navigate to admin login page, THEN login
+                browser.SwitchTo().Alert().Dismiss();
+                browser.Navigate().GoToUrl(browser.Url + "/admin/advanced");
+                browser.SwitchTo().Alert().SetAuthenticationCredentials(userName, passWord);
+
+                var DarkRows = browser.FindElementsByTagName("d3d3d3");
+                var LightRows = browser.FindElementsByTagName("dcdcdc");
+                var uptime = DarkRows[4].FindElements(By.Id("td"));
+                ATAInfo = $"Uptime: {uptime[3].Text}\nRebooted/Rebuit ATA. ";
+                browser.Navigate().GoToUrl(OrgURL + "/admin/reboot");
+                //BrowserHelper.CreateBrowser(browser.Url);
+            }
+            catch (NoAlertPresentException BadAlert)
+            {
+                Console.WriteLine($"No alert found when attempting reboot, are lines in use? ref: {BadAlert.ToString()}");
+                ATAInfo += "No alert found when attempting reboot, are lines in use?";
+
+            }
+            catch(Exception e)
+            { 
+                return ATAInfo = $"Unknown Error occured. Please try again. Ref: {e.ToString()}";
+            }
+
             return ATAInfo;
         }
 
