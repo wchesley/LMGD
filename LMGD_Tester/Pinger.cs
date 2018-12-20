@@ -38,13 +38,14 @@ namespace LMGD_Tester
             Console.WriteLine($"{equipType} IP: {result}");
                 try
                 {
-                for (int counter = 1; counter >= 10; counter++)
+                for (int counter = 1; counter <= 10; counter++)
                 {
                     PingReply reply = Pinger.Send(result.Value, timeout, buffer, opt);
                     if (reply.Status == IPStatus.Success)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms");
+                        successPacket++;
                     }
                     if (reply.Status == IPStatus.Success && counter == 10)
                     {
@@ -52,6 +53,7 @@ namespace LMGD_Tester
                         Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms");
                         PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms \n";
                         Console.ResetColor();
+                        successPacket++;
                         switch (equipType)
                         {
                             case "ATA Cambium":
