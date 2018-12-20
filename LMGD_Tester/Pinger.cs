@@ -24,8 +24,8 @@ namespace LMGD_Tester
             Ping Pinger = new Ping();
             PingOptions opt = new PingOptions();
             opt.DontFragment = true;
-            //int successPacket = 0;
-            //int failedPacket = 0; 
+            int successPacket = 0;
+            int failedPacket = 0; 
             //create packet as per https://docs.microsoft.com/en-us/dotnet/api/system.net.networkinformation.ping?view=netframework-4.7.2
             string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
             byte[] buffer = Encoding.ASCII.GetBytes(data);
@@ -38,13 +38,20 @@ namespace LMGD_Tester
             Console.WriteLine($"{equipType} IP: {result}");
                 try
                 {
+                for (int counter = 1; counter >= 10; counter++)
+                {
                     PingReply reply = Pinger.Send(result.Value, timeout, buffer, opt);
                     if (reply.Status == IPStatus.Success)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms");
+                    }
+                    if (reply.Status == IPStatus.Success && counter == 10)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms");
                         PingReplies += $"Ping to {reply.Address.ToString()} received in: {reply.RoundtripTime}ms \n";
-                        Console.ResetColor(); 
+                        Console.ResetColor();
                         switch (equipType)
                         {
                             case "ATA Cambium":
@@ -74,17 +81,18 @@ namespace LMGD_Tester
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"Failed to receive reply from {result.Value}");
                         Console.ResetColor();
-                        return PingReplies += $"Failed to receive reply from {result.Value}";
-                    
-                        //failedPacket++;
+                        //return PingReplies += $"Failed to receive reply from {result.Value}";
+
+                        failedPacket++;
                     }
+                }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Ping Error: {e.ToString()}");
                     return PingReplies;
                 }
-
+            Console.WriteLine($"Received: {successPacket.ToString()}\nFailed Responses: {failedPacket.ToString()}");
             return PingReplies; 
         }
     }
