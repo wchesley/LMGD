@@ -23,19 +23,13 @@ namespace LMGD_Tester
             //var browser = new BrowserExt().CreateBrowser(FOPS);
 
             FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
-                      
-            /*support for command line arguements:
-             * Handled as LMGD_Tester.exe <custAccountNumber>
-             * no other arguements are needed and will be discarded. 
-             * if no arguement is passed app will ask for account number
-             * before procedding
-            */
-            if(args.Length == 0)
-            {
-                //Get customer account number from end user...
-                Console.WriteLine("Enter Account number: ");
-                AccountNumber = Console.ReadLine();
-            }
+
+            
+            //Get customer account number from end user...
+            Console.WriteLine("Enter Account number: ");
+            AccountNumber = Console.ReadLine();
+            
+            
              
             //get ATA Info first
             var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
