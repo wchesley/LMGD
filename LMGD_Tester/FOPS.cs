@@ -152,21 +152,28 @@ namespace LMGD_Tester
                 browser.FindElementById("voip_search_submit_button").Click();
 
                 //TODO: Handle Multiple ATA's found. Need good way of verifiying we've selected the right customer
-                //Selects First ATA found in table
+                string ataType = string.Empty;
                 var ATA_Table = browser.FindElementsByClassName("table_row");
-                //assume first row has our ATA
-                var ATA_Rows = ATA_Table[0].FindElements(By.TagName("td"));
-            
-            
-                //to get ATA Type
-                Console.WriteLine($"Found ATA Type: {ATA_Rows[2].Text}");
-            
-                string ataType = ATA_Rows[2].Text;
-                var ataSuspended = ATA_Rows[9]; //checks if ata is suspended. should be yes or no. 
                 //wowee have to call explicit wait to get this crap site to 'accept' my click, lol headless browser be too quick son!
                 Thread.Sleep(100);
-                //Stuck here, feel like this isn't the first time either, will need to mitigate this. 
-                ATA_Table[0].Click();
+                //assume first row has our ATA
+                for (int count = 0; count == ATA_Table.Count; count++)
+                {
+                    var ATA_Rows = ATA_Table[count].FindElements(By.TagName("td"));
+                    if(GetATA.CorrectATA(ATA_Rows[0].Text,AccountNumber) == true)
+                    {
+                        ATA_Info = $"{ATA_Rows[0].Text}\nATA Type: {ATA_Rows[2].Text}";
+                        ataType = ATA_Rows[2].Text;
+                        ATA_Table[count].Click();
+                        count = ATA_Table.Count;
+                    }
+                }
+                
+            
+            
+                 
+                
+                
 
 
                 //ATA config page opens in new tab. cannot call URL dirctly. returns error

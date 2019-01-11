@@ -12,6 +12,15 @@ namespace LMGD_Tester
         private const string passWord = ".amaph0n3";
         public BrowserExt BrowserHelper = new BrowserExt();
 
+        public bool CorrectATA(string ATA, string AccountNumber)
+        {
+            if (ATA.Contains($"({AccountNumber})"))
+            {
+                return true;
+            }
+            else return false; 
+        }
+
         public string Cambium(ChromeDriver browser)
         {
             BrowserExt ElementCheck = new BrowserExt();
