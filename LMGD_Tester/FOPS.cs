@@ -169,12 +169,6 @@ namespace LMGD_Tester
                     }
                 }
                 
-            
-            
-                 
-                
-                
-
 
                 //ATA config page opens in new tab. cannot call URL dirctly. returns error
                 browser.SwitchTo().Window(browser.WindowHandles[1]);
