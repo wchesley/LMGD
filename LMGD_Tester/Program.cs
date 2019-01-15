@@ -24,7 +24,8 @@ namespace LMGD_Tester
 
             FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
                       
-            /*support for command line arguements:
+            /*
+             * support for command line arguements:
              * Handled as LMGD_Tester.exe <custAccountNumber>
              * no other arguements are needed and will be discarded. 
              * if no arguement is passed app will ask for account number
