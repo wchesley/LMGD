@@ -17,10 +17,10 @@ namespace LMGD_Tester
             Stopwatch timer = new Stopwatch();
             timer.Start();
             //init headless chrome browser
-            //var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
+            var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
 
             //init GUI chrome browser, mostly just for testings sake. 
-            var browser = new BrowserExt().CreateBrowser(FOPS);
+            //var browser = new BrowserExt().CreateBrowser(FOPS);
 
             FOPSPage.FOPS_Login(browser, FOPS + AtaProvisioning);
                       
