@@ -157,17 +157,26 @@ namespace LMGD_Tester
                 //wowee have to call explicit wait to get this crap site to 'accept' my click, lol headless browser be too quick son!
                 Thread.Sleep(100);
                 //assume first row has our ATA
-                for (int count = 0; count == ATA_Table.Count; count++)
+                if(ATA_Table.Count == 0)
                 {
-                    var ATA_Rows = ATA_Table[count].FindElements(By.TagName("td"));
-                    if(GetATA.CorrectATA(ATA_Rows[0].Text,AccountNumber) == true)
+                    var ATA_Rows = ATA_Table[0].FindElements(By.TagName("td"));
+                }
+                //else iterate over all rows maybe?
+                else if(ATA_Table.Count >= 1)
+                {
+                    for (int count = 1; count == ATA_Table.Count; count++)
                     {
-                        ATA_Info = $"{ATA_Rows[0].Text}\nATA Type: {ATA_Rows[2].Text}";
-                        ataType = ATA_Rows[2].Text;
-                        ATA_Table[count].Click();
-                        count = ATA_Table.Count;
+                        var ATA_Rows = ATA_Table[count].FindElements(By.TagName("td"));
+                        if (GetATA.CorrectATA(ATA_Rows[0].Text, AccountNumber) == true)
+                        {
+                            ATA_Info = $"{ATA_Rows[0].Text}\nATA Type: {ATA_Rows[2].Text}";
+                            ataType = ATA_Rows[2].Text;
+                            ATA_Table[count].Click();
+                            count = ATA_Table.Count;
+                        }
                     }
                 }
+                
                 
 
                 //ATA config page opens in new tab. cannot call URL dirctly. returns error
