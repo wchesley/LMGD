@@ -39,6 +39,7 @@ namespace LMGD_Tester
                 }
                 throw;
             }
+
         }
         public ChromeDriver CreateBrowser(string URL)
         {

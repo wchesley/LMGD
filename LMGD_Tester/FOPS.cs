@@ -150,33 +150,22 @@ namespace LMGD_Tester
             {
                 browser.FindElementById("search_foreign_id").SendKeys(AccountNumber);
                 browser.FindElementById("voip_search_submit_button").Click();
-
+                //Table is loaded on same page, have to explicitly wait to see what we want, implicit waits weren't working properly for this. 
+                Thread.Sleep(100);
                 //TODO: Handle Multiple ATA's found. Need good way of verifiying we've selected the right customer
                 string ataType = string.Empty;
                 var ATA_Table = browser.FindElementsByClassName("table_row");
-                //wowee have to call explicit wait to get this crap site to 'accept' my click, lol headless browser be too quick son!
-                Thread.Sleep(100);
-                //assume first row has our ATA
-                if(ATA_Table.Count == 0)
+                
+                foreach(var tr in ATA_Table)
                 {
-                    var ATA_Rows = ATA_Table[0].FindElements(By.TagName("td"));
-                }
-                //else iterate over all rows maybe?
-                else if(ATA_Table.Count >= 1)
-                {
-                    for (int count = 1; count == ATA_Table.Count; count++)
+                    var ATA_Row = tr.FindElements(By.TagName("td"));
+                    if(GetATA.CorrectATA(ATA_Row[0].Text, AccountNumber))
                     {
-                        var ATA_Rows = ATA_Table[count].FindElements(By.TagName("td"));
-                        if (GetATA.CorrectATA(ATA_Rows[0].Text, AccountNumber) == true)
-                        {
-                            ATA_Info = $"{ATA_Rows[0].Text}\nATA Type: {ATA_Rows[2].Text}";
-                            ataType = ATA_Rows[2].Text;
-                            ATA_Table[count].Click();
-                            count = ATA_Table.Count;
-                        }
+                        ataType = ATA_Row[2].Text;
+                        ATA_Row[0].Click();
+                        break;
                     }
                 }
-                
                 
 
                 //ATA config page opens in new tab. cannot call URL dirctly. returns error
