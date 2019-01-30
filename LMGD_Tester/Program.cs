@@ -15,7 +15,6 @@ namespace LMGD_Tester
             string AccountNumber = "";
             FOPS FOPSPage = new FOPS();
             Stopwatch timer = new Stopwatch();
-            timer.Start();
             //init headless chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
 
@@ -28,9 +27,10 @@ namespace LMGD_Tester
             //Get customer account number from end user...
             Console.WriteLine("Enter Account number: ");
             AccountNumber = Console.ReadLine();
-            
-            
-             
+            timer.Start();
+
+
+
             //get ATA Info first
             var ReturnedATA = FOPSPage.GetAtaIp(browser, AccountNumber);
             Console.WriteLine(ReturnedATA.ToString());
