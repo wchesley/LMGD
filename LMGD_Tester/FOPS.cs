@@ -165,6 +165,10 @@ namespace LMGD_Tester
                         ATA_Row[0].Click();
                         break;
                     }
+                    else
+                    {
+                        return ATA_Info = "Couldn't find ATA in search"; 
+                    }
                 }
                 
 
@@ -212,7 +216,7 @@ namespace LMGD_Tester
                         ATA_Info = ATAError;   
                         break;
                 }
-
+                
             }
             catch (Exception e)
             {

@@ -10,8 +10,10 @@ namespace LMGD_Tester
         {
             try
             {
+                Console.WriteLine("Initializing Chrome...");
                 var chromeOptions = new ChromeOptions();
-                chromeOptions.AddArguments("headless", "whitelisted-ips='' ", "remote-debugging-port=8000", @"user-data-directory=C:\Users\wchesley\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
+                chromeOptions.AddArguments("headless", "whitelisted-ips='' ", "log-level=3", @"user-data-directory=C:\Users\wchesley\AppData\Local\Google\Chrome\User Data\Default"); //@ home = 1 Default, work = 2 \Default
+                Console.WriteLine("Setting Options...");
                 var browser = new ChromeDriver(chromeOptions);
                 browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(25);
                 browser.Navigate().GoToUrl(URL);
@@ -22,6 +24,7 @@ namespace LMGD_Tester
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"ERROR! Couldn't start chrome session\nWould you like to try the GUI browser instead?\nY/N:");
                 Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Green;
                 string choice = Console.ReadLine();
                 switch (choice)
                 {

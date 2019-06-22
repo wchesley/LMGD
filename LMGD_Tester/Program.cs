@@ -15,6 +15,7 @@ namespace LMGD_Tester
             string AccountNumber = "";
             FOPS FOPSPage = new FOPS();
             Stopwatch timer = new Stopwatch();
+            Console.ForegroundColor = ConsoleColor.Green;
             //init headless chrome browser
             var browser = new BrowserExt().CreateHeadlessBrowser(FOPS);
 
